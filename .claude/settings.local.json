@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(CACHE=\"C:/Users/Deeemon/AppData/Local/User Name/com.companyname.youtubemusic/Cache\" *)",
+      "Bash(xxd 'C:/Users/Deeemon/AppData/Local/User Name/com.companyname.youtubemusic/Cache/ytm_eee5fbc7-676b-463e-9ac0-f3a8b74c09a4.m4a')",
+      "Read(//c//**)",
+      "Read(//c/Program Files/**)",
+      "Bash(dotnet --version)",
+      "Bash(dotnet build *)",
+      "Bash(cat)",
+      "Bash(python /tmp/demux.py __TRACKED_VAR__/ytm_eee5fbc7-676b-463e-9ac0-f3a8b74c09a4.m4a /tmp/out.aac)",
+      "Read(//tmp/**)",
+      "Bash(rm -f 'C:/Users/Deeemon/AppData/Local/User Name/com.companyname.youtubemusic/Cache/ytm_eee5fbc7-676b-463e-9ac0-f3a8b74c09a4.aac')",
+      "Bash(rm -rf /tmp/demuxtest)"
+    ]
+  }
+}
