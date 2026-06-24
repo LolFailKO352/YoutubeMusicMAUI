@@ -1,7 +1,5 @@
 # YouTube Music (Unofficial MAUI Client)
 
-![YouTube Music App Banner](docs/images/banner_placeholder.png) <!-- Add banner here later -->
-
 A modern, fast, and unofficial YouTube Music client built on the [.NET MAUI](https://dotnet.microsoft.com/en-us/apps/maui) platform. This application brings the best of YouTube Music straight to your desktop using a native interface, improved music recommendation algorithms, and deep system integration.
 
 ## ✨ Features
@@ -18,11 +16,13 @@ A modern, fast, and unofficial YouTube Music client built on the [.NET MAUI](htt
 
 | Home Screen | Player and Queue |
 |-------------|----------------|
-| ![Home](docs/images/screenshot_home.png) | ![Player](docs/images/screenshot_player.png) |
+| <img width="1903" height="1128" alt="image" src="https://github.com/user-attachments/assets/c719fab8-7d62-4a9b-9c10-0dc40c2b858a" /> | <img width="1904" height="1129" alt="image" src="https://github.com/user-attachments/assets/36f492cf-651e-4756-9172-90ec9268990d" />
+ |
 
 | Search Results | Personal Library |
 |----------------|--------------|
-| ![Search](docs/images/screenshot_search.png) | ![Library](docs/images/screenshot_library.png) |
+| <img width="1904" height="1129" alt="image" src="https://github.com/user-attachments/assets/6fec368f-5886-43c9-8378-356d86a6363d" /> | <img width="1904" height="1129" alt="image" src="https://github.com/user-attachments/assets/1bf7efef-03c2-47e9-aaa1-61ce1997ec72" />
+ |
 
 *(Note: Don't forget to add your own images to the `docs/images/` folder later and update the filenames above!)*
 
