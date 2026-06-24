@@ -26,30 +26,6 @@ Moderní, rychlý a neoficiální YouTube Music klient postavený na platformě 
 
 *(Poznámka: Nezapomeňte později přidat své vlastní obrázky do složky `docs/images/` a upravit názvy souborů výše!)*
 
-## 🚀 Jak začít
-
-### Prerekvizity
-- [.NET 10 SDK](https://dotnet.microsoft.com/download) (nebo nejnovější dostupná verze s podporou MAUI).
-- Visual Studio 2022 (s nainstalovaným balíčkem **.NET Multi-platform App UI development**).
-
-### Instalace a spuštění
-1. **Naklonujte repozitář:**
-   ```bash
-   git clone https://github.com/vase_jmeno/YoutubeMusic.git
-   cd YoutubeMusic
-   ```
-
-2. **Obnovte závislosti (Restore):**
-   ```bash
-   dotnet restore
-   ```
-
-3. **Spusťte projekt:**
-   Nejjednodušší cesta je spustit projekt přímo přes Visual Studio (cíl: `Windows Machine`), případně přes příkazovou řádku:
-   ```bash
-   dotnet build -t:Run -f net10.0-windows10.0.19041.0
-   ```
-
 ## 🔐 Jak funguje přihlašování
 
 Aplikace používá bezpečné vestavěné okno prohlížeče (WebView) k tomu, abyste se mohli přihlásit přímo přes Google/YouTube. Po úspěšném přihlášení si aplikace sama na pozadí vytáhne bezpečné "session cookies". Díky nim získá přístup k vaší osobní knihovně a může vám generovat doporučení na míru. Tento postup plně obchází nutnost využívání oficiálního (a často placeného) API klíče.
