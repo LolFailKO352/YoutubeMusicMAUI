@@ -24,9 +24,6 @@ A modern, fast, and unofficial YouTube Music client built on the [.NET MAUI](htt
 <img width="1904" height="1129" alt="image" src="https://github.com/user-attachments/assets/6fec368f-5886-43c9-8378-356d86a6363d" /> | <img width="1904" height="1129" alt="image" src="https://github.com/user-attachments/assets/1bf7efef-03c2-47e9-aaa1-61ce1997ec72" />
 
 
-*(Note: Don't forget to add your own images to the `docs/images/` folder later and update the filenames above!)*
-
-<<<<<<< HEAD
 ## 🔐 How Login Works
 
 The application uses a secure built-in browser window (WebView) to allow you to log in directly via Google/YouTube. After a successful login, the app securely retrieves "session cookies" in the background. Thanks to them, it gains access to your personal library and can generate personalized recommendations. This approach fully bypasses the need for an official (and often paid) API key.
