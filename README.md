@@ -27,29 +27,6 @@ A modern, fast, and unofficial YouTube Music client built on the [.NET MAUI](htt
 *(Note: Don't forget to add your own images to the `docs/images/` folder later and update the filenames above!)*
 
 <<<<<<< HEAD
-## 🚀 Getting Started
-
-### Prerequisites
-- [.NET 10 SDK](https://dotnet.microsoft.com/download) (or the latest available version with MAUI support).
-- Visual Studio 2022 (with the **.NET Multi-platform App UI development** workload installed).
-
-### Installation and Execution
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/your_name/YoutubeMusic.git
-   cd YoutubeMusic
-   ```
-
-2. **Restore dependencies:**
-   ```bash
-   dotnet restore
-   ```
-
-3. **Run the project:**
-   The easiest way is to run the project directly through Visual Studio (target: `Windows Machine`), or via the command line:
-   ```bash
-   dotnet build -t:Run -f net10.0-windows10.0.19041.0
-   ```
 
 ## 🔐 How Login Works
 =======
