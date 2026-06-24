@@ -1,72 +1,72 @@
 # YouTube Music (Unofficial MAUI Client)
 
-![YouTube Music App Banner](docs/images/banner_placeholder.png) <!-- Sem později doplňte banner -->
+![YouTube Music App Banner](docs/images/banner_placeholder.png) <!-- Add banner here later -->
 
-Moderní, rychlý a neoficiální YouTube Music klient postavený na platformě [.NET MAUI](https://dotnet.microsoft.com/en-us/apps/maui). Tato aplikace přináší to nejlepší z YouTube Music přímo na váš desktop pomocí nativního rozhraní, vylepšených algoritmů pro doporučování hudby a hluboké integrace do systému.
+A modern, fast, and unofficial YouTube Music client built on the [.NET MAUI](https://dotnet.microsoft.com/en-us/apps/maui) platform. This application brings the best of YouTube Music straight to your desktop using a native interface, improved music recommendation algorithms, and deep system integration.
 
-## ✨ Funkce
+## ✨ Features
 
-- **🎵 Nativní přehrávání**: Plynulé a kvalitní přehrávání hudby na pozadí pomocí nativního MAUI MediaElementu.
-- **🧠 Chytrá doporučení na míru**: Aplikace obsahuje unikátní algoritmus, který analyzuje vaši osobní knihovnu (uložené skladby, interprety, alba a playlisty) a na domovské obrazovce vám automaticky generuje personalizované rádio a ty nejlepší tipy přímo pro vás.
-- **🎨 Moderní UI/UX**: Nativní design v duchu Windows 11 / WinUI 3. Plně responzivní rozložení, které se přizpůsobí velikosti okna, s podporou automatického přepínání mezi světlým (Light) a tmavým (Dark) režimem.
-- **🌍 Plná lokalizace**: Vestavěný překladatelský engine, který za chodu překládá kompletně celou aplikaci pro cizojazyčné uživatele.
-- **⚙️ Integrace do systému**: Aplikace běží v systémové liště (Tray menu) s rychlými ovládacími prvky pro přehrávání (Play/Pause), takže můžete ovládat hudbu, aniž byste museli okno aplikace otevírat.
-- **🔍 Hledání a prozkoumávání**: Vyhledávejte jakékoliv skladby, interprety, alba nebo komunitní playlisty přímo z YouTube Music.
-- **📚 Správa knihovny**: Jednoduše procházejte své uložené písničky, oblíbená alba a interprety.
+- **🎵 Native Playback**: Smooth and high-quality background music playback using the native MAUI MediaElement.
+- **🧠 Smart Tailored Recommendations**: The app includes a unique algorithm that analyzes your personal library (saved tracks, artists, albums, and playlists) and automatically generates personalized radio and top picks tailored just for you on the home screen.
+- **🎨 Modern UI/UX**: Native design inspired by Windows 11 / WinUI 3. Fully responsive layout that adapts to the window size, with support for automatic switching between Light and Dark mode.
+- **🌍 Full Localization**: Built-in translation engine that translates the entire application on the fly for non-native users.
+- **⚙️ System Integration**: The app runs in the system tray menu with quick playback controls (Play/Pause), allowing you to control music without having to open the app window.
+- **🔍 Search and Explore**: Search for any tracks, artists, albums, or community playlists directly from YouTube Music.
+- **📚 Library Management**: Easily browse your saved songs, favorite albums, and artists.
 
-## 📸 Snímky obrazovky
+## 📸 Screenshots
 
-| Domovská obrazovka | Přehrávač a fronta |
+| Home Screen | Player and Queue |
 |-------------|----------------|
-| ![Domů](docs/images/screenshot_home.png) | ![Přehrávač](docs/images/screenshot_player.png) |
+| ![Home](docs/images/screenshot_home.png) | ![Player](docs/images/screenshot_player.png) |
 
-| Výsledky hledání | Osobní knihovna |
+| Search Results | Personal Library |
 |----------------|--------------|
-| ![Hledání](docs/images/screenshot_search.png) | ![Knihovna](docs/images/screenshot_library.png) |
+| ![Search](docs/images/screenshot_search.png) | ![Library](docs/images/screenshot_library.png) |
 
-*(Poznámka: Nezapomeňte později přidat své vlastní obrázky do složky `docs/images/` a upravit názvy souborů výše!)*
+*(Note: Don't forget to add your own images to the `docs/images/` folder later and update the filenames above!)*
 
-## 🚀 Jak začít
+## 🚀 Getting Started
 
-### Prerekvizity
-- [.NET 10 SDK](https://dotnet.microsoft.com/download) (nebo nejnovější dostupná verze s podporou MAUI).
-- Visual Studio 2022 (s nainstalovaným balíčkem **.NET Multi-platform App UI development**).
+### Prerequisites
+- [.NET 10 SDK](https://dotnet.microsoft.com/download) (or the latest available version with MAUI support).
+- Visual Studio 2022 (with the **.NET Multi-platform App UI development** workload installed).
 
-### Instalace a spuštění
-1. **Naklonujte repozitář:**
+### Installation and Execution
+1. **Clone the repository:**
    ```bash
-   git clone https://github.com/vase_jmeno/YoutubeMusic.git
+   git clone https://github.com/your_name/YoutubeMusic.git
    cd YoutubeMusic
    ```
 
-2. **Obnovte závislosti (Restore):**
+2. **Restore dependencies:**
    ```bash
    dotnet restore
    ```
 
-3. **Spusťte projekt:**
-   Nejjednodušší cesta je spustit projekt přímo přes Visual Studio (cíl: `Windows Machine`), případně přes příkazovou řádku:
+3. **Run the project:**
+   The easiest way is to run the project directly through Visual Studio (target: `Windows Machine`), or via the command line:
    ```bash
    dotnet build -t:Run -f net10.0-windows10.0.19041.0
    ```
 
-## 🔐 Jak funguje přihlašování
+## 🔐 How Login Works
 
-Aplikace používá bezpečné vestavěné okno prohlížeče (WebView) k tomu, abyste se mohli přihlásit přímo přes Google/YouTube. Po úspěšném přihlášení si aplikace sama na pozadí vytáhne bezpečné "session cookies". Díky nim získá přístup k vaší osobní knihovně a může vám generovat doporučení na míru. Tento postup plně obchází nutnost využívání oficiálního (a často placeného) API klíče.
+The application uses a secure built-in browser window (WebView) to allow you to log in directly via Google/YouTube. After a successful login, the app securely retrieves "session cookies" in the background. Thanks to them, it gains access to your personal library and can generate personalized recommendations. This approach fully bypasses the need for an official (and often paid) API key.
 
-## 🛠️ Technologie
+## 🛠️ Technologies
 
 - **Framework**: [.NET MAUI](https://dotnet.microsoft.com/apps/maui)
-- **Architektura**: MVVM (Model-View-ViewModel) s využitím [CommunityToolkit.Mvvm](https://learn.microsoft.com/en-us/dotnet/communitytoolkit/mvvm/)
-- **Média**: `CommunityToolkit.Maui.MediaElement`
-- **Data a API**: 
+- **Architecture**: MVVM (Model-View-ViewModel) using [CommunityToolkit.Mvvm](https://learn.microsoft.com/en-us/dotnet/communitytoolkit/mvvm/)
+- **Media**: `CommunityToolkit.Maui.MediaElement`
+- **Data and API**: 
   - [YoutubeExplode](https://github.com/Tyrrrz/YoutubeExplode)
-  - Vlastní integrace YouTube Music API
+  - Custom YouTube Music API integration
 
-## 🤝 Přispívání
-Návrhy na vylepšení, nahlášení chyb nebo "pull requesty" jsou vítány! Podívejte se do záložky [Issues](https://github.com/vase_jmeno/YoutubeMusic/issues).
+## 🤝 Contributing
+Suggestions for improvements, bug reports, or pull requests are welcome! Check out the [Issues](https://github.com/your_name/YoutubeMusic/issues) tab.
 
-## 📄 Licence
-Tento projekt je šířen pod licencí MIT. Více podrobností naleznete v souboru [LICENSE](LICENSE).
+## 📄 License
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
 
-*Upozornění: Toto je neoficiální, komunitně tvořený projekt. Není sponzorován, schválen ani nijak spojen se společnostmi Google LLC nebo YouTube.*
+*Disclaimer: This is an unofficial, community-created project. It is not sponsored, endorsed, or otherwise affiliated with Google LLC or YouTube.*
