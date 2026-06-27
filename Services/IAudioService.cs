@@ -2,7 +2,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace YoutubeMusic.Services;
+namespace Melodium.Services;
 
 public interface IAudioService
 {

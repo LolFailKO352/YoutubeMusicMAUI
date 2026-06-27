@@ -1,6 +1,6 @@
 using System;
 
-namespace YoutubeMusic.Models
+namespace Melodium.Models
 {
     public class CookieDto
     {

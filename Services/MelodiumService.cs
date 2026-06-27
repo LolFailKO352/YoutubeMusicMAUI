@@ -4,7 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-using YoutubeMusic.Models;
+using Melodium.Models;
 using YouTubeMusicAPI.Client;
 using YouTubeMusicAPI.Models.Search;
 using YouTubeMusicAPI.Models.Library;
@@ -12,9 +12,9 @@ using YouTubeMusicAPI.Models.Info;
 using YouTubeSessionGenerator;
 using YoutubeExplode;
 using YoutubeExplode.Videos.Streams;
-namespace YoutubeMusic.Services
+namespace Melodium.Services
 {
-    public class YouTubeMusicService
+    public class MelodiumService
     {
         private YouTubeMusicClient _client;
         private string _visitorData = "";
@@ -24,7 +24,7 @@ namespace YoutubeMusic.Services
         private System.Net.Http.HttpClient _httpClient;
         private readonly YoutubeClient _ytExplodeClient;
 
-        public YouTubeMusicService()
+        public MelodiumService()
         {
             _ytExplodeClient = new YoutubeClient();
             // Výchozí inicializace bez cookies
@@ -361,7 +361,8 @@ namespace YoutubeMusic.Services
                             visitorData = _visitorData
                         }
                     },
-                    videoId = videoId
+                    videoId = videoId,
+                    playlistId = "RDAMVM" + videoId
                 };
 
                 var content = new System.Net.Http.StringContent(System.Text.Json.JsonSerializer.Serialize(body), System.Text.Encoding.UTF8, "application/json");
@@ -414,6 +415,20 @@ namespace YoutubeMusic.Services
                         var title = renderer?["flexColumns"]?[0]?["musicResponsiveListItemFlexColumnRenderer"]?["text"]?["runs"]?[0]?["text"]?.ToString();
                         var artist = renderer?["flexColumns"]?[1]?["musicResponsiveListItemFlexColumnRenderer"]?["text"]?["runs"]?[0]?["text"]?.ToString() ?? "Neznámý interpret";
                         var thumb = renderer?["thumbnail"]?["musicThumbnailRenderer"]?["thumbnail"]?["thumbnails"]?[0]?["url"]?.ToString();
+                        
+                        results.Add(new SongModel { VideoId = videoId, Title = title ?? "Neznámé", Artist = artist, ThumbnailUrl = thumb });
+                    }
+                }
+                else if (obj.ContainsKey("playlistPanelVideoRenderer"))
+                {
+                    var renderer = obj["playlistPanelVideoRenderer"];
+                    var videoId = renderer?["videoId"]?.ToString();
+                    
+                    if (!string.IsNullOrEmpty(videoId))
+                    {
+                        var title = renderer?["title"]?["runs"]?[0]?["text"]?.ToString();
+                        var artist = renderer?["longBylineText"]?["runs"]?[0]?["text"]?.ToString() ?? "Neznámý interpret";
+                        var thumb = renderer?["thumbnail"]?["thumbnails"]?[0]?["url"]?.ToString();
                         
                         results.Add(new SongModel { VideoId = videoId, Title = title ?? "Neznámé", Artist = artist, ThumbnailUrl = thumb });
                     }

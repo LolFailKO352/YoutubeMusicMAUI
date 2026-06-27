@@ -3,7 +3,7 @@ using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.IO;
 
-namespace YoutubeMusic.Services;
+namespace Melodium.Services;
 
 /// <summary>
 /// Převede fragmentovaný MP4 (DASH/fMP4, jak ho servíruje YouTube – itag 140)

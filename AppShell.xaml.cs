@@ -1,4 +1,4 @@
-﻿namespace YoutubeMusic
+﻿namespace Melodium
 {
     public partial class AppShell : Shell
     {

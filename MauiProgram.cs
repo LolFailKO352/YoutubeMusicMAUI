@@ -4,9 +4,9 @@ using Microsoft.Maui.LifecycleEvents;
 #if WINDOWS
 using H.NotifyIcon;
 #endif
-using YoutubeMusic;
+using Melodium;
 
-namespace YoutubeMusic;
+namespace Melodium;
 
 public static class MauiProgram
 {
@@ -43,7 +43,7 @@ public static class MauiProgram
                         {
                             appWindow.Closing += (s, e) =>
                             {
-                                if (!YoutubeMusic.App.IsExiting)
+                                if (!Melodium.App.IsExiting)
                                 {
                                     e.Cancel = true;
                                     appWindow.Hide();
@@ -56,9 +56,10 @@ public static class MauiProgram
             });
 
         // Registrace služeb pro Dependency Injection
-        builder.Services.AddSingleton<Services.YouTubeMusicService>();
+        builder.Services.AddSingleton<Services.MelodiumService>();
         builder.Services.AddSingleton<Services.IAudioService, Services.MauiAudioService>();
         builder.Services.AddSingleton<Services.TranslationService>();
+        builder.Services.AddSingleton<Services.DiscordRpcService>();
         builder.Services.AddTransient<ViewModels.MainViewModel>();
         builder.Services.AddTransient<MainPage>();
 

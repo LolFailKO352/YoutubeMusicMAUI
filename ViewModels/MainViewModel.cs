@@ -9,15 +9,15 @@ using System.Threading.Tasks;
 using Microsoft.Maui.ApplicationModel;
 using Microsoft.Maui.Storage;
 using Microsoft.Maui.Controls;
-using YoutubeMusic.Models;
-using YoutubeMusic.Services;
+using Melodium.Models;
+using Melodium.Services;
 using System.Globalization;
 
-namespace YoutubeMusic.ViewModels;
+namespace Melodium.ViewModels;
 
 public partial class MainViewModel : ObservableObject
 {
-    private readonly YouTubeMusicService _ytService;
+    private readonly MelodiumService _ytService;
     private readonly IAudioService _audioService;
     private readonly TranslationService _translationService;
     private System.Threading.CancellationTokenSource? _downloadCts;
@@ -72,6 +72,15 @@ public partial class MainViewModel : ObservableObject
     [ObservableProperty] public partial string TextSettings { get; set; } = "Nastavení";
     [ObservableProperty] public partial string TextLanguageSelection { get; set; } = "Výběr jazyka";
     
+    [ObservableProperty] public partial bool IsDiscordRpcEnabled { get; set; }
+    [ObservableProperty] public partial string TextEnableDiscordRpc { get; set; } = "Zobrazovat aktivitu na Discordu";
+
+    partial void OnIsDiscordRpcEnabledChanged(bool value)
+    {
+        Preferences.Default.Set("IsDiscordRpcEnabled", value);
+        _discordRpcService?.HandleSettingsChanged();
+    }
+    
     [ObservableProperty] public partial string TextSearchPlaceholder { get; set; } = "Vyhledat aplikace, hry a další (nebo hudbu!)";
     [ObservableProperty] public partial string TextLanguageDescription { get; set; } = "Vyberte preferovaný jazyk aplikace. Seznam obsahuje všechny dostupné světové jazyky.";
     [ObservableProperty] public partial string TextHeroSubtitle { get; set; } = "Poslouchej hudbu bez omezení a bez reklam";
@@ -80,7 +89,7 @@ public partial class MainViewModel : ObservableObject
     [ObservableProperty] public partial string TextLoadingRecommendations { get; set; } = "Načítám doporučení...";
     [ObservableProperty] public partial string TextPersonalizedSongs { get; set; } = "Doporučené skladby přímo pro vás";
     [ObservableProperty] public partial string TextLockedLibrary { get; set; } = "Uzamčená Knihovna";
-    [ObservableProperty] public partial string TextLockedLibraryDesc { get; set; } = "Chcete-li zobrazit své skladby, playlisty a alba z YouTube Music, musíte se přihlásit.";
+    [ObservableProperty] public partial string TextLockedLibraryDesc { get; set; } = "Chcete-li zobrazit své skladby, playlisty a alba z Melodium, musíte se přihlásit.";
     [ObservableProperty] public partial string TextGoToLogin { get; set; } = "Přejít k přihlášení";
     [ObservableProperty] public partial string TextMusic { get; set; } = "Hudba";
     [ObservableProperty] public partial string TextSongs { get; set; } = "Skladby";
@@ -93,11 +102,12 @@ public partial class MainViewModel : ObservableObject
     [ObservableProperty] public partial string TextPlay { get; set; } = "Přehrát";
     [ObservableProperty] public partial string TextLoginInstructions { get; set; } = "Instrukce pro přihlášení";
     [ObservableProperty] public partial string TextLoginInstruction1 { get; set; } = "1. Přihlaste se ke svému Google / YouTube účtu přímo v okně níže.";
-    [ObservableProperty] public partial string TextLoginInstruction2 { get; set; } = "2. Po úspěšném přihlášení a načtení hlavní stránky YouTube Music vás aplikace automaticky připojí a stáhne vaši osobní knihovnu.";
+    [ObservableProperty] public partial string TextLoginInstruction2 { get; set; } = "2. Po úspěšném přihlášení a načtení hlavní stránky Melodium vás aplikace automaticky připojí a stáhne vaši osobní knihovnu.";
     [ObservableProperty] public partial string TextPlaybackQueue { get; set; } = "Fronta přehrávání";
     [ObservableProperty] public partial string TextClearQueue { get; set; } = "Vyčistit frontu";
     [ObservableProperty] public partial string TextEmptyQueue { get; set; } = "Fronta je prázdná";
     [ObservableProperty] public partial string TextEmptyQueueDesc { get; set; } = "Najděte nějaké skladby a spusťte přehrávání.";
+    [ObservableProperty] public partial string TextRemoveFromQueue { get; set; } = "Odebrat z fronty";
     [ObservableProperty] public partial string TextSongsCountLabel { get; set; } = "Skladeb:";
     [ObservableProperty] public partial string TextReleaseYearLabel { get; set; } = "Rok:";
     [ObservableProperty] public partial string TextSubscribersLabel { get; set; } = "Odběratelé:";
@@ -106,6 +116,14 @@ public partial class MainViewModel : ObservableObject
     [ObservableProperty] public partial string TextStatusLibraryEmpty { get; set; } = "Knihovna skladeb je prázdná, míchám z doporučené hudby...";
     [ObservableProperty] public partial string TextStatusShuffleFailed { get; set; } = "Nelze zahájit míchání - žádné dostupné skladby.";
     [ObservableProperty] public partial string TextStatusLibraryLoaded { get; set; } = "Vaše knihovna a doporučení byly úspěšně načteny.";
+
+    [ObservableProperty] public partial string TextStartMix { get; set; } = "Spustit mix";
+    [ObservableProperty] public partial string TextPlayNext { get; set; } = "Přehrát jako další";
+    [ObservableProperty] public partial string TextAddToQueue { get; set; } = "Přidat do fronty";
+    [ObservableProperty] public partial string TextSaveToPlaylist { get; set; } = "Uložit do playlistu";
+    [ObservableProperty] public partial string TextGoToAlbum { get; set; } = "Přejít do alba";
+    [ObservableProperty] public partial string TextGoToArtist { get; set; } = "Přejít na interpreta";
+    [ObservableProperty] public partial string TextShare { get; set; } = "Sdílet";
 
     private readonly Dictionary<string, string> _baseTexts = new()
     {
@@ -116,6 +134,7 @@ public partial class MainViewModel : ObservableObject
         { nameof(TextAccount), "Účet" },
         { nameof(TextLogout), "Odhlásit" },
         { nameof(TextSettings), "Nastavení" },
+        { nameof(TextEnableDiscordRpc), "Zobrazovat aktivitu na Discordu" },
         { nameof(TextLanguageSelection), "Výběr jazyka" },
         { nameof(TextSearchPlaceholder), "Vyhledat aplikace, hry a další (nebo hudbu!)" },
         { nameof(TextLanguageDescription), "Vyberte preferovaný jazyk aplikace. Seznam obsahuje všechny dostupné světové jazyky." },
@@ -125,7 +144,7 @@ public partial class MainViewModel : ObservableObject
         { nameof(TextLoadingRecommendations), "Načítám doporučení..." },
         { nameof(TextPersonalizedSongs), "Doporučené skladby přímo pro vás" },
         { nameof(TextLockedLibrary), "Uzamčená Knihovna" },
-        { nameof(TextLockedLibraryDesc), "Chcete-li zobrazit své skladby, playlisty a alba z YouTube Music, musíte se přihlásit." },
+        { nameof(TextLockedLibraryDesc), "Chcete-li zobrazit své skladby, playlisty a alba z Melodium, musíte se přihlásit." },
         { nameof(TextGoToLogin), "Přejít k přihlášení" },
         { nameof(TextMusic), "Hudba" },
         { nameof(TextSongs), "Skladby" },
@@ -138,7 +157,7 @@ public partial class MainViewModel : ObservableObject
         { nameof(TextPlay), "Přehrát" },
         { nameof(TextLoginInstructions), "Instrukce pro přihlášení" },
         { nameof(TextLoginInstruction1), "1. Přihlaste se ke svému Google / YouTube účtu přímo v okně níže." },
-        { nameof(TextLoginInstruction2), "2. Po úspěšném přihlášení a načtení hlavní stránky YouTube Music vás aplikace automaticky připojí a stáhne vaši osobní knihovnu." },
+        { nameof(TextLoginInstruction2), "2. Po úspěšném přihlášení a načtení hlavní stránky Melodium vás aplikace automaticky připojí a stáhne vaši osobní knihovnu." },
         { nameof(TextPlaybackQueue), "Fronta přehrávání" },
         { nameof(TextClearQueue), "Vyčistit frontu" },
         { nameof(TextEmptyQueue), "Fronta je prázdná" },
@@ -150,7 +169,14 @@ public partial class MainViewModel : ObservableObject
         { nameof(TextStatusReady), "Připraveno. Zvol sekci a hraj." },
         { nameof(TextStatusLibraryEmpty), "Knihovna skladeb je prázdná, míchám z doporučené hudby..." },
         { nameof(TextStatusShuffleFailed), "Nelze zahájit míchání - žádné dostupné skladby." },
-        { nameof(TextStatusLibraryLoaded), "Vaše knihovna a doporučení byly úspěšně načteny." }
+        { nameof(TextStatusLibraryLoaded), "Vaše knihovna a doporučení byly úspěšně načteny." },
+        { nameof(TextStartMix), "Spustit mix" },
+        { nameof(TextPlayNext), "Přehrát jako další" },
+        { nameof(TextAddToQueue), "Přidat do fronty" },
+        { nameof(TextSaveToPlaylist), "Uložit do playlistu" },
+        { nameof(TextGoToAlbum), "Přejít do alba" },
+        { nameof(TextGoToArtist), "Přejít na interpreta" },
+        { nameof(TextShare), "Sdílet" }
     };
 
     private async Task UpdateLocalizedStringsAsync(CultureInfo culture)
@@ -187,6 +213,11 @@ public partial class MainViewModel : ObservableObject
     [NotifyPropertyChangedFor(nameof(IsCurrentSongNull))]
     public partial SongModel? CurrentSong { get; set; }
 
+    partial void OnCurrentSongChanged(SongModel? value)
+    {
+        _discordRpcService?.UpdatePlaybackState(value, IsPlaying);
+    }
+
     public bool IsCurrentSongNotNull => CurrentSong != null;
     public bool IsCurrentSongNull => CurrentSong == null;
 
@@ -208,10 +239,13 @@ public partial class MainViewModel : ObservableObject
     partial void OnIsPlayingChanged(bool value)
     {
         PlayPauseIcon = value ? "⏸" : "▶";
+        _discordRpcService?.UpdatePlaybackState(CurrentSong, value);
     }
 
     [ObservableProperty]
     public partial string LibraryTab { get; set; } = "Songs"; // Songs, Playlists, Albums, Artists
+
+
 
     [RelayCommand]
     private void SetLibraryTab(string tabName)
@@ -222,9 +256,25 @@ public partial class MainViewModel : ObservableObject
     [ObservableProperty]
     public partial double Volume { get; set; } = 0.5;
 
+    [ObservableProperty]
+    public partial string VolumeIcon { get; set; } = "\uE767";
+
+    [ObservableProperty]
+    public partial string VolumePercentageText { get; set; } = "50 %";
+
     partial void OnVolumeChanged(double value)
     {
         _audioService.Volume = (float)value;
+        VolumePercentageText = $"{(int)(value * 100)} %";
+        
+        if (value <= 0)
+            VolumeIcon = "\uE74F"; // Mute
+        else if (value < 0.33)
+            VolumeIcon = "\uE992"; // Volume 1
+        else if (value < 0.66)
+            VolumeIcon = "\uE993"; // Volume 2
+        else
+            VolumeIcon = "\uE767"; // Volume 3
     }
 
     [ObservableProperty]
@@ -326,11 +376,18 @@ public partial class MainViewModel : ObservableObject
         IsBusy = false;
     }
 
-    public MainViewModel(YouTubeMusicService ytService, IAudioService audioService, TranslationService translationService)
+    private readonly DiscordRpcService _discordRpcService;
+
+    public MainViewModel(MelodiumService ytService, IAudioService audioService, TranslationService translationService, DiscordRpcService discordRpcService)
     {
         _ytService = ytService;
         _audioService = audioService;
         _translationService = translationService;
+        _discordRpcService = discordRpcService;
+
+        IsDiscordRpcEnabled = Preferences.Default.Get("IsDiscordRpcEnabled", false);
+        _discordRpcService.HandleSettingsChanged();
+
         _audioService.Volume = (float)Volume;
 
         // Hook up audio service events
@@ -414,6 +471,7 @@ public partial class MainViewModel : ObservableObject
     {
         if (string.IsNullOrWhiteSpace(SearchQuery)) return;
 
+        CurrentView = "Search";
         IsBusy = true;
         SearchResults.Clear();
         StatusMessage = $"Vyhledávám: {SearchQuery}...";
@@ -606,8 +664,9 @@ public partial class MainViewModel : ObservableObject
             var streamUrl = await _ytService.GetAudioStreamUrlAsync(song.VideoId);
             token.ThrowIfCancellationRequested();
 
-            // Pokud jsme právě začali přehrávat písničku a fronta nemá další, natáhneme Rádio
-            if (CurrentQueueIndex == PlaybackQueue.Count - 1 && PlaybackQueue.Count < 20)
+            // Nekonečná fronta (Auto-play / Radio)
+            // Pokud se blížíme ke konci fronty (zbývají 3 a méně skladeb), načteme další doporučené k aktuální
+            if (PlaybackQueue.Count - CurrentQueueIndex <= 3)
             {
                 _ = Task.Run(async () =>
                 {
@@ -616,8 +675,12 @@ public partial class MainViewModel : ObservableObject
                     {
                         foreach (var nextSong in upNext)
                         {
-                            PlaybackQueue.Add(nextSong);
-                            _originalQueue.Add(nextSong);
+                            // Přidat pouze skladby, které ještě ve frontě nebyly, abychom zamezili duplicitám
+                            if (!_originalQueue.Any(s => s.VideoId == nextSong.VideoId))
+                            {
+                                PlaybackQueue.Add(nextSong);
+                                _originalQueue.Add(nextSong);
+                            }
                         }
                     });
                 });
@@ -728,6 +791,42 @@ public partial class MainViewModel : ObservableObject
         _audioService.Stop();
         IsPlaying = false;
         StatusMessage = "Fronta byla vymazána.";
+    }
+
+    [RelayCommand]
+    private void RemoveFromQueue(SongModel? song)
+    {
+        if (song == null) return;
+        
+        int index = PlaybackQueue.IndexOf(song);
+        if (index >= 0)
+        {
+            PlaybackQueue.RemoveAt(index);
+            
+            var origIndex = _originalQueue.IndexOf(song);
+            if (origIndex >= 0)
+                _originalQueue.RemoveAt(origIndex);
+
+            if (index < CurrentQueueIndex)
+            {
+                CurrentQueueIndex--;
+            }
+            else if (index == CurrentQueueIndex)
+            {
+                if (PlaybackQueue.Count > 0)
+                {
+                    if (CurrentQueueIndex >= PlaybackQueue.Count)
+                    {
+                        CurrentQueueIndex = 0;
+                    }
+                    _ = PlayQueueCurrentSongAsync();
+                }
+                else
+                {
+                    ClearQueue();
+                }
+            }
+        }
     }
 
     private void ApplyShuffle()
@@ -873,7 +972,7 @@ public partial class MainViewModel : ObservableObject
     public async Task LoadLibraryAsync()
     {
         IsBusy = true;
-        StatusMessage = "Načítám domovskou obrazovku a knihovnu z YouTube Music...";
+        StatusMessage = "Načítám domovskou obrazovku a knihovnu z Melodium...";
         try
         {
             await _ytService.EnsureInitializedAsync();
@@ -1011,4 +1110,137 @@ public partial class MainViewModel : ObservableObject
             System.Diagnostics.Debug.WriteLine($"Chyba při generování doporučení: {ex.Message}");
         }
     }
+
+    [RelayCommand]
+    private async Task StartMixAsync(SongModel? song)
+    {
+        if (song == null) return;
+        
+        // Zastavit aktuální přehrávání
+        _audioService.Stop();
+        
+        // Vyčistit frontu
+        PlaybackQueue.Clear();
+        _originalQueue.Clear();
+        CurrentQueueIndex = 0;
+        
+        // Přidat na první místo
+        PlaybackQueue.Add(song);
+        _originalQueue.Add(song);
+        
+        // Nyní rovnou spustíme přehrávání aktuální skladby, nekonečná fronta
+        // se postará o zbytek jakmile se přehraje (PlaybackQueue.Count - 0 <= 3)
+        await PlayQueueCurrentSongAsync();
+        
+        // Přepneme view na Frontu
+        IsFullScreenPlayerVisible = true;
+    }
+
+    [RelayCommand]
+    private void PlaySongNext(SongModel? song)
+    {
+        if (song == null) return;
+        if (PlaybackQueue.Any(s => s.VideoId == song.VideoId))
+        {
+            StatusMessage = $"Skladba '{song.Title}' už ve frontě je.";
+            return;
+        }
+        
+        if (PlaybackQueue.Count == 0)
+        {
+            PlaybackQueue.Add(song);
+            _originalQueue.Add(song);
+            CurrentQueueIndex = 0;
+            _ = PlayQueueCurrentSongAsync();
+        }
+        else
+        {
+            // Vložíme ihned za právě hrající skladbu
+            PlaybackQueue.Insert(CurrentQueueIndex + 1, song);
+            _originalQueue.Add(song);
+            StatusMessage = $"Skladba '{song.Title}' zařazena jako další.";
+        }
+    }
+
+    [RelayCommand]
+    private void AddToQueue(SongModel? song)
+    {
+        if (song == null) return;
+        if (PlaybackQueue.Any(s => s.VideoId == song.VideoId))
+        {
+            StatusMessage = $"Skladba '{song.Title}' už ve frontě je.";
+            return;
+        }
+        
+        if (PlaybackQueue.Count == 0)
+        {
+            PlaybackQueue.Add(song);
+            _originalQueue.Add(song);
+            CurrentQueueIndex = 0;
+            _ = PlayQueueCurrentSongAsync();
+        }
+        else
+        {
+            // Vložíme na konec
+            PlaybackQueue.Add(song);
+            _originalQueue.Add(song);
+            StatusMessage = $"Skladba '{song.Title}' přidána na konec fronty.";
+        }
+    }
+
+    private SongModel? _draggedSong;
+
+    [RelayCommand]
+    private void DragStarting(SongModel? song)
+    {
+        _draggedSong = song;
+    }
+
+    [RelayCommand]
+    private void Drop(SongModel? targetSong)
+    {
+        if (_draggedSong == null || targetSong == null || _draggedSong == targetSong)
+        {
+            _draggedSong = null;
+            return;
+        }
+
+        int oldIndex = PlaybackQueue.IndexOf(_draggedSong);
+        int newIndex = PlaybackQueue.IndexOf(targetSong);
+        
+        if (oldIndex >= 0 && newIndex >= 0)
+        {
+            PlaybackQueue.Move(oldIndex, newIndex);
+            
+            // Sync _originalQueue
+            var origOldIndex = _originalQueue.IndexOf(_draggedSong);
+            if (origOldIndex >= 0)
+            {
+                _originalQueue.RemoveAt(origOldIndex);
+                var targetOrigIndex = _originalQueue.IndexOf(targetSong);
+                if (targetOrigIndex >= 0)
+                {
+                    if (oldIndex > newIndex)
+                        _originalQueue.Insert(targetOrigIndex, _draggedSong);
+                    else
+                        _originalQueue.Insert(targetOrigIndex + 1, _draggedSong);
+                }
+                else
+                {
+                    _originalQueue.Add(_draggedSong);
+                }
+            }
+
+            // Sync CurrentQueueIndex if we moved the currently playing song, 
+            // or if we moved a song before/after the currently playing song.
+            if (CurrentSong != null)
+            {
+                CurrentQueueIndex = PlaybackQueue.IndexOf(CurrentSong);
+            }
+        }
+        
+        _draggedSong = null;
+    }
+
+
 }

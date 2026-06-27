@@ -7,7 +7,7 @@ using CommunityToolkit.Maui.Core;
 using CommunityToolkit.Maui.Views;
 using Microsoft.Maui.ApplicationModel;
 
-namespace YoutubeMusic.Services;
+namespace Melodium.Services;
 
 public class MauiAudioService : IAudioService, IDisposable
 {

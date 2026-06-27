@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace YoutubeMusic.Models
+namespace Melodium.Models
 {
     public class SongModel
     {

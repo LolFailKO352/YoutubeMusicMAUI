@@ -1,6 +1,6 @@
 ﻿using Foundation;
 
-namespace YoutubeMusic
+namespace Melodium
 {
     [Register("AppDelegate")]
     public class AppDelegate : MauiUIApplicationDelegate

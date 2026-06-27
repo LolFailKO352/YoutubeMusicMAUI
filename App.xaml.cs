@@ -1,13 +1,17 @@
 using Microsoft.Extensions.DependencyInjection;
-using YoutubeMusic.Services;
-using YoutubeMusic.ViewModels;
+using Melodium.Services;
+using Melodium.ViewModels;
 
-namespace YoutubeMusic
+namespace Melodium
 {
     public partial class App : Application
     {
         public App()
         {
+#if WINDOWS
+            var userDataFolder = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Melodium", "WebView2");
+            Environment.SetEnvironmentVariable("WEBVIEW2_USER_DATA_FOLDER", userDataFolder);
+#endif
             InitializeComponent();
 
             AppDomain.CurrentDomain.UnhandledException += (sender, e) =>
@@ -42,7 +46,7 @@ namespace YoutubeMusic
 #if WINDOWS
             _trayIcon = new H.NotifyIcon.TaskbarIcon
             {
-                ToolTipText = "Youtube Music",
+                ToolTipText = "Melodium",
                 IconSource = "trayicon.ico"
             };
 

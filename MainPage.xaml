@@ -1,15 +1,15 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:viewmodels="clr-namespace:YoutubeMusic.ViewModels"
+             xmlns:viewmodels="clr-namespace:Melodium.ViewModels"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-             xmlns:models="clr-namespace:YoutubeMusic.Models"
-             xmlns:local="clr-namespace:YoutubeMusic"
+             xmlns:models="clr-namespace:Melodium.Models"
+             xmlns:local="clr-namespace:Melodium"
 
-             x:Class="YoutubeMusic.MainPage"
+             x:Class="Melodium.MainPage"
              x:DataType="viewmodels:MainViewModel"
              BackgroundColor="{AppThemeBinding Light={OnPlatform WinUI='Transparent', Default={StaticResource WinUIBgLight}}, Dark={OnPlatform WinUI='Transparent', Default={StaticResource WinUIBgDark}}}"
              Shell.NavBarIsVisible="False"
-             Title="YouTube Music"
+             Title="Melodium"
              x:Name="RootPage">
 
     <ContentPage.Resources>
@@ -223,44 +223,7 @@
                         </Border>
                     </Grid>
 
-                    <!-- Fronta -->
-                    <Grid HeightRequest="56">
-                        <Grid.GestureRecognizers>
-                            <TapGestureRecognizer Command="{Binding NavigateCommand}" CommandParameter="Queue" />
-                        </Grid.GestureRecognizers>
-                        
-                        <BoxView WidthRequest="3" HeightRequest="24" CornerRadius="1.5" HorizontalOptions="Start" VerticalOptions="Center" BackgroundColor="{AppThemeBinding Light={StaticResource WinUIAccentLight}, Dark={StaticResource WinUIAccentDark}}" IsVisible="False">
-                            <BoxView.Triggers>
-                                <DataTrigger TargetType="BoxView" Binding="{Binding CurrentView}" Value="Queue">
-                                    <Setter Property="IsVisible" Value="True" />
-                                </DataTrigger>
-                            </BoxView.Triggers>
-                        </BoxView>
 
-                        <Border Stroke="Transparent" StrokeShape="RoundRectangle 6" BackgroundColor="Transparent" Padding="0,6" Margin="8,0,8,0">
-                            <Border.Triggers>
-                                <DataTrigger TargetType="Border" Binding="{Binding CurrentView}" Value="Queue">
-                                    <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource WinUISelectedLight}, Dark={StaticResource WinUISelectedDark}}" />
-                                </DataTrigger>
-                            </Border.Triggers>
-                            <VerticalStackLayout Spacing="2" VerticalOptions="Center" HorizontalOptions="Center">
-                                <Label HorizontalOptions="Center" FontSize="18" TextColor="{AppThemeBinding Light={StaticResource WinUITextPrimaryLight}, Dark={StaticResource WinUITextPrimaryDark}}">
-                                    <Label.FontFamily>
-                                        <OnPlatform x:TypeArguments="x:String">
-                                            <On Platform="WinUI" Value="Segoe Fluent Icons" />
-                                        </OnPlatform>
-                                    </Label.FontFamily>
-                                    <Label.Text>
-                                        <OnPlatform x:TypeArguments="x:String">
-                                            <On Platform="WinUI" Value="&#xE8FD;" />
-                                            <On Platform="Default" Value="≡" />
-                                        </OnPlatform>
-                                    </Label.Text>
-                                </Label>
-                                <Label Text="{Binding TextQueue}" FontSize="10" HorizontalOptions="Center" TextColor="{AppThemeBinding Light={StaticResource WinUITextPrimaryLight}, Dark={StaticResource WinUITextPrimaryDark}}" />
-                            </VerticalStackLayout>
-                        </Border>
-                    </Grid>
                 </VerticalStackLayout>
 
                 <!-- Profil / Nastavení -->
@@ -405,7 +368,7 @@
                 </Grid>
 
                 <!-- VIEWS AREA -->
-                <Grid Grid.Row="1">
+                <Grid Grid.Row="1" x:Name="ViewsAreaGrid">
                     
                     <!-- SEKCE: NASTAVENÍ -->
                     <Grid IsVisible="False">
@@ -439,6 +402,17 @@
                                                 HorizontalOptions="Start" />
                                     </VerticalStackLayout>
                                 </Border>
+
+                                <Border Stroke="{AppThemeBinding Light={StaticResource WinUICardBorderLight}, Dark={StaticResource WinUICardBorderDark}}" 
+                                        StrokeThickness="1" 
+                                        BackgroundColor="{AppThemeBinding Light={StaticResource WinUICardBgLight}, Dark={StaticResource WinUICardBgDark}}" 
+                                        StrokeShape="RoundRectangle 8" 
+                                        Padding="20">
+                                    <HorizontalStackLayout Spacing="16" VerticalOptions="Center">
+                                        <Switch IsToggled="{Binding IsDiscordRpcEnabled, Mode=TwoWay}" Toggled="OnDiscordRpcToggled" VerticalOptions="Center" />
+                                        <Label Text="{Binding TextEnableDiscordRpc}" FontSize="18" VerticalOptions="Center" TextColor="{AppThemeBinding Light={StaticResource WinUITextPrimaryLight}, Dark={StaticResource WinUITextPrimaryDark}}" />
+                                    </HorizontalStackLayout>
+                                </Border>
                             </VerticalStackLayout>
                         </ScrollView>
                     </Grid>
@@ -470,6 +444,46 @@
                                                         StrokeShape="RoundRectangle 8" 
                                                         WidthRequest="300" HeightRequest="100" 
                                                         Padding="12" Margin="12,0,12,24">
+                                                    <FlyoutBase.ContextFlyout>
+                                                        <MenuFlyout>
+                                                            <MenuFlyoutItem Text="{Binding BindingContext.TextStartMix, Source={x:Reference RootPage}}" Command="{Binding BindingContext.StartMixCommand, Source={x:Reference RootPage}}" CommandParameter="{Binding .}">
+                                                                <MenuFlyoutItem.IconImageSource>
+                                                                    <FontImageSource FontFamily="Segoe Fluent Icons" Glyph="&#xE8B1;" />
+                                                                </MenuFlyoutItem.IconImageSource>
+                                                            </MenuFlyoutItem>
+                                                            <MenuFlyoutItem Text="{Binding BindingContext.TextPlayNext, Source={x:Reference RootPage}}" Command="{Binding BindingContext.PlaySongNextCommand, Source={x:Reference RootPage}}" CommandParameter="{Binding .}">
+                                                                <MenuFlyoutItem.IconImageSource>
+                                                                    <FontImageSource FontFamily="Segoe Fluent Icons" Glyph="&#xE893;" />
+                                                                </MenuFlyoutItem.IconImageSource>
+                                                            </MenuFlyoutItem>
+                                                            <MenuFlyoutItem Text="{Binding BindingContext.TextAddToQueue, Source={x:Reference RootPage}}" Command="{Binding BindingContext.AddToQueueCommand, Source={x:Reference RootPage}}" CommandParameter="{Binding .}">
+                                                                <MenuFlyoutItem.IconImageSource>
+                                                                    <FontImageSource FontFamily="Segoe Fluent Icons" Glyph="&#xE8D5;" />
+                                                                </MenuFlyoutItem.IconImageSource>
+                                                            </MenuFlyoutItem>
+                                                            <MenuFlyoutSeparator />
+                                                            <MenuFlyoutItem Text="{Binding BindingContext.TextSaveToPlaylist, Source={x:Reference RootPage}}" Command="{Binding BindingContext.NotImplementedCommand, Source={x:Reference RootPage}}" CommandParameter="{Binding BindingContext.TextSaveToPlaylist, Source={x:Reference RootPage}}">
+                                                                <MenuFlyoutItem.IconImageSource>
+                                                                    <FontImageSource FontFamily="Segoe Fluent Icons" Glyph="&#xE8E5;" />
+                                                                </MenuFlyoutItem.IconImageSource>
+                                                            </MenuFlyoutItem>
+                                                            <MenuFlyoutItem Text="{Binding BindingContext.TextGoToAlbum, Source={x:Reference RootPage}}" Command="{Binding BindingContext.NotImplementedCommand, Source={x:Reference RootPage}}" CommandParameter="{Binding BindingContext.TextGoToAlbum, Source={x:Reference RootPage}}">
+                                                                <MenuFlyoutItem.IconImageSource>
+                                                                    <FontImageSource FontFamily="Segoe Fluent Icons" Glyph="&#xE8ED;" />
+                                                                </MenuFlyoutItem.IconImageSource>
+                                                            </MenuFlyoutItem>
+                                                            <MenuFlyoutItem Text="{Binding BindingContext.TextGoToArtist, Source={x:Reference RootPage}}" Command="{Binding BindingContext.NotImplementedCommand, Source={x:Reference RootPage}}" CommandParameter="{Binding BindingContext.TextGoToArtist, Source={x:Reference RootPage}}">
+                                                                <MenuFlyoutItem.IconImageSource>
+                                                                    <FontImageSource FontFamily="Segoe Fluent Icons" Glyph="&#xE77B;" />
+                                                                </MenuFlyoutItem.IconImageSource>
+                                                            </MenuFlyoutItem>
+                                                            <MenuFlyoutItem Text="{Binding BindingContext.TextShare, Source={x:Reference RootPage}}" Command="{Binding BindingContext.NotImplementedCommand, Source={x:Reference RootPage}}" CommandParameter="{Binding BindingContext.TextShare, Source={x:Reference RootPage}}">
+                                                                <MenuFlyoutItem.IconImageSource>
+                                                                    <FontImageSource FontFamily="Segoe Fluent Icons" Glyph="&#xE72D;" />
+                                                                </MenuFlyoutItem.IconImageSource>
+                                                            </MenuFlyoutItem>
+                                                        </MenuFlyout>
+                                                    </FlyoutBase.ContextFlyout>
                                                     <Border.GestureRecognizers>
                                                         <TapGestureRecognizer Command="{Binding BindingContext.PlaySongCommand, Source={x:Reference RootPage}}" CommandParameter="{Binding .}" />
                                                     </Border.GestureRecognizers>
@@ -507,6 +521,46 @@
                                                         StrokeShape="RoundRectangle 8" 
                                                         WidthRequest="300" HeightRequest="100" 
                                                         Padding="12" Margin="12,0,12,24">
+                                                    <FlyoutBase.ContextFlyout>
+                                                        <MenuFlyout>
+                                                            <MenuFlyoutItem Text="{Binding BindingContext.TextStartMix, Source={x:Reference RootPage}}" Command="{Binding BindingContext.StartMixCommand, Source={x:Reference RootPage}}" CommandParameter="{Binding .}">
+                                                                <MenuFlyoutItem.IconImageSource>
+                                                                    <FontImageSource FontFamily="Segoe Fluent Icons" Glyph="&#xE8B1;" />
+                                                                </MenuFlyoutItem.IconImageSource>
+                                                            </MenuFlyoutItem>
+                                                            <MenuFlyoutItem Text="{Binding BindingContext.TextPlayNext, Source={x:Reference RootPage}}" Command="{Binding BindingContext.PlaySongNextCommand, Source={x:Reference RootPage}}" CommandParameter="{Binding .}">
+                                                                <MenuFlyoutItem.IconImageSource>
+                                                                    <FontImageSource FontFamily="Segoe Fluent Icons" Glyph="&#xE893;" />
+                                                                </MenuFlyoutItem.IconImageSource>
+                                                            </MenuFlyoutItem>
+                                                            <MenuFlyoutItem Text="{Binding BindingContext.TextAddToQueue, Source={x:Reference RootPage}}" Command="{Binding BindingContext.AddToQueueCommand, Source={x:Reference RootPage}}" CommandParameter="{Binding .}">
+                                                                <MenuFlyoutItem.IconImageSource>
+                                                                    <FontImageSource FontFamily="Segoe Fluent Icons" Glyph="&#xE8D5;" />
+                                                                </MenuFlyoutItem.IconImageSource>
+                                                            </MenuFlyoutItem>
+                                                            <MenuFlyoutSeparator />
+                                                            <MenuFlyoutItem Text="{Binding BindingContext.TextSaveToPlaylist, Source={x:Reference RootPage}}" Command="{Binding BindingContext.NotImplementedCommand, Source={x:Reference RootPage}}" CommandParameter="{Binding BindingContext.TextSaveToPlaylist, Source={x:Reference RootPage}}">
+                                                                <MenuFlyoutItem.IconImageSource>
+                                                                    <FontImageSource FontFamily="Segoe Fluent Icons" Glyph="&#xE8E5;" />
+                                                                </MenuFlyoutItem.IconImageSource>
+                                                            </MenuFlyoutItem>
+                                                            <MenuFlyoutItem Text="{Binding BindingContext.TextGoToAlbum, Source={x:Reference RootPage}}" Command="{Binding BindingContext.NotImplementedCommand, Source={x:Reference RootPage}}" CommandParameter="{Binding BindingContext.TextGoToAlbum, Source={x:Reference RootPage}}">
+                                                                <MenuFlyoutItem.IconImageSource>
+                                                                    <FontImageSource FontFamily="Segoe Fluent Icons" Glyph="&#xE8ED;" />
+                                                                </MenuFlyoutItem.IconImageSource>
+                                                            </MenuFlyoutItem>
+                                                            <MenuFlyoutItem Text="{Binding BindingContext.TextGoToArtist, Source={x:Reference RootPage}}" Command="{Binding BindingContext.NotImplementedCommand, Source={x:Reference RootPage}}" CommandParameter="{Binding BindingContext.TextGoToArtist, Source={x:Reference RootPage}}">
+                                                                <MenuFlyoutItem.IconImageSource>
+                                                                    <FontImageSource FontFamily="Segoe Fluent Icons" Glyph="&#xE77B;" />
+                                                                </MenuFlyoutItem.IconImageSource>
+                                                            </MenuFlyoutItem>
+                                                            <MenuFlyoutItem Text="{Binding BindingContext.TextShare, Source={x:Reference RootPage}}" Command="{Binding BindingContext.NotImplementedCommand, Source={x:Reference RootPage}}" CommandParameter="{Binding BindingContext.TextShare, Source={x:Reference RootPage}}">
+                                                                <MenuFlyoutItem.IconImageSource>
+                                                                    <FontImageSource FontFamily="Segoe Fluent Icons" Glyph="&#xE72D;" />
+                                                                </MenuFlyoutItem.IconImageSource>
+                                                            </MenuFlyoutItem>
+                                                        </MenuFlyout>
+                                                    </FlyoutBase.ContextFlyout>
                                                     <Border.GestureRecognizers>
                                                         <TapGestureRecognizer Command="{Binding BindingContext.PlaySongCommand, Source={x:Reference RootPage}}" CommandParameter="{Binding .}" />
                                                     </Border.GestureRecognizers>
@@ -552,6 +606,46 @@
                                             StrokeShape="RoundRectangle 8" 
                                             BackgroundColor="{AppThemeBinding Light={StaticResource WinUICardBgLight}, Dark={StaticResource WinUICardBgDark}}" 
                                             HeightRequest="240">
+                                        <FlyoutBase.ContextFlyout>
+                                            <MenuFlyout>
+                                                <MenuFlyoutItem Text="{Binding BindingContext.TextStartMix, Source={x:Reference RootPage}}" Command="{Binding BindingContext.StartMixCommand, Source={x:Reference RootPage}}" CommandParameter="{Binding .}">
+                                                    <MenuFlyoutItem.IconImageSource>
+                                                        <FontImageSource FontFamily="Segoe Fluent Icons" Glyph="&#xE8B1;" />
+                                                    </MenuFlyoutItem.IconImageSource>
+                                                </MenuFlyoutItem>
+                                                <MenuFlyoutItem Text="{Binding BindingContext.TextPlayNext, Source={x:Reference RootPage}}" Command="{Binding BindingContext.PlaySongNextCommand, Source={x:Reference RootPage}}" CommandParameter="{Binding .}">
+                                                    <MenuFlyoutItem.IconImageSource>
+                                                        <FontImageSource FontFamily="Segoe Fluent Icons" Glyph="&#xE893;" />
+                                                    </MenuFlyoutItem.IconImageSource>
+                                                </MenuFlyoutItem>
+                                                <MenuFlyoutItem Text="{Binding BindingContext.TextAddToQueue, Source={x:Reference RootPage}}" Command="{Binding BindingContext.AddToQueueCommand, Source={x:Reference RootPage}}" CommandParameter="{Binding .}">
+                                                    <MenuFlyoutItem.IconImageSource>
+                                                        <FontImageSource FontFamily="Segoe Fluent Icons" Glyph="&#xE8D5;" />
+                                                    </MenuFlyoutItem.IconImageSource>
+                                                </MenuFlyoutItem>
+                                                <MenuFlyoutSeparator />
+                                                <MenuFlyoutItem Text="{Binding BindingContext.TextSaveToPlaylist, Source={x:Reference RootPage}}" Command="{Binding BindingContext.NotImplementedCommand, Source={x:Reference RootPage}}" CommandParameter="{Binding BindingContext.TextSaveToPlaylist, Source={x:Reference RootPage}}">
+                                                    <MenuFlyoutItem.IconImageSource>
+                                                        <FontImageSource FontFamily="Segoe Fluent Icons" Glyph="&#xE8E5;" />
+                                                    </MenuFlyoutItem.IconImageSource>
+                                                </MenuFlyoutItem>
+                                                <MenuFlyoutItem Text="{Binding BindingContext.TextGoToAlbum, Source={x:Reference RootPage}}" Command="{Binding BindingContext.NotImplementedCommand, Source={x:Reference RootPage}}" CommandParameter="{Binding BindingContext.TextGoToAlbum, Source={x:Reference RootPage}}">
+                                                    <MenuFlyoutItem.IconImageSource>
+                                                        <FontImageSource FontFamily="Segoe Fluent Icons" Glyph="&#xE8ED;" />
+                                                    </MenuFlyoutItem.IconImageSource>
+                                                </MenuFlyoutItem>
+                                                <MenuFlyoutItem Text="{Binding BindingContext.TextGoToArtist, Source={x:Reference RootPage}}" Command="{Binding BindingContext.NotImplementedCommand, Source={x:Reference RootPage}}" CommandParameter="{Binding BindingContext.TextGoToArtist, Source={x:Reference RootPage}}">
+                                                    <MenuFlyoutItem.IconImageSource>
+                                                        <FontImageSource FontFamily="Segoe Fluent Icons" Glyph="&#xE77B;" />
+                                                    </MenuFlyoutItem.IconImageSource>
+                                                </MenuFlyoutItem>
+                                                <MenuFlyoutItem Text="{Binding BindingContext.TextShare, Source={x:Reference RootPage}}" Command="{Binding BindingContext.NotImplementedCommand, Source={x:Reference RootPage}}" CommandParameter="{Binding BindingContext.TextShare, Source={x:Reference RootPage}}">
+                                                    <MenuFlyoutItem.IconImageSource>
+                                                        <FontImageSource FontFamily="Segoe Fluent Icons" Glyph="&#xE72D;" />
+                                                    </MenuFlyoutItem.IconImageSource>
+                                                </MenuFlyoutItem>
+                                            </MenuFlyout>
+                                        </FlyoutBase.ContextFlyout>
                                         <Grid RowDefinitions="140, *">
                                             <!-- Thumbnail -->
                                             <Image Grid.Row="0" Source="{Binding ThumbnailUrl}" Aspect="AspectFill" />
@@ -685,6 +779,46 @@
                                         <CollectionView.ItemTemplate>
                                             <DataTemplate x:DataType="models:SongModel">
                                                 <Border Stroke="Transparent" StrokeShape="RoundRectangle 8" BackgroundColor="Transparent" Padding="12,12">
+                                                    <FlyoutBase.ContextFlyout>
+                                                        <MenuFlyout>
+                                                            <MenuFlyoutItem Text="{Binding BindingContext.TextStartMix, Source={x:Reference RootPage}}" Command="{Binding BindingContext.StartMixCommand, Source={x:Reference RootPage}}" CommandParameter="{Binding .}">
+                                                                <MenuFlyoutItem.IconImageSource>
+                                                                    <FontImageSource FontFamily="Segoe Fluent Icons" Glyph="&#xE8B1;" />
+                                                                </MenuFlyoutItem.IconImageSource>
+                                                            </MenuFlyoutItem>
+                                                            <MenuFlyoutItem Text="{Binding BindingContext.TextPlayNext, Source={x:Reference RootPage}}" Command="{Binding BindingContext.PlaySongNextCommand, Source={x:Reference RootPage}}" CommandParameter="{Binding .}">
+                                                                <MenuFlyoutItem.IconImageSource>
+                                                                    <FontImageSource FontFamily="Segoe Fluent Icons" Glyph="&#xE893;" />
+                                                                </MenuFlyoutItem.IconImageSource>
+                                                            </MenuFlyoutItem>
+                                                            <MenuFlyoutItem Text="{Binding BindingContext.TextAddToQueue, Source={x:Reference RootPage}}" Command="{Binding BindingContext.AddToQueueCommand, Source={x:Reference RootPage}}" CommandParameter="{Binding .}">
+                                                                <MenuFlyoutItem.IconImageSource>
+                                                                    <FontImageSource FontFamily="Segoe Fluent Icons" Glyph="&#xE8D5;" />
+                                                                </MenuFlyoutItem.IconImageSource>
+                                                            </MenuFlyoutItem>
+                                                            <MenuFlyoutSeparator />
+                                                            <MenuFlyoutItem Text="{Binding BindingContext.TextSaveToPlaylist, Source={x:Reference RootPage}}" Command="{Binding BindingContext.NotImplementedCommand, Source={x:Reference RootPage}}" CommandParameter="{Binding BindingContext.TextSaveToPlaylist, Source={x:Reference RootPage}}">
+                                                                <MenuFlyoutItem.IconImageSource>
+                                                                    <FontImageSource FontFamily="Segoe Fluent Icons" Glyph="&#xE8E5;" />
+                                                                </MenuFlyoutItem.IconImageSource>
+                                                            </MenuFlyoutItem>
+                                                            <MenuFlyoutItem Text="{Binding BindingContext.TextGoToAlbum, Source={x:Reference RootPage}}" Command="{Binding BindingContext.NotImplementedCommand, Source={x:Reference RootPage}}" CommandParameter="{Binding BindingContext.TextGoToAlbum, Source={x:Reference RootPage}}">
+                                                                <MenuFlyoutItem.IconImageSource>
+                                                                    <FontImageSource FontFamily="Segoe Fluent Icons" Glyph="&#xE8ED;" />
+                                                                </MenuFlyoutItem.IconImageSource>
+                                                            </MenuFlyoutItem>
+                                                            <MenuFlyoutItem Text="{Binding BindingContext.TextGoToArtist, Source={x:Reference RootPage}}" Command="{Binding BindingContext.NotImplementedCommand, Source={x:Reference RootPage}}" CommandParameter="{Binding BindingContext.TextGoToArtist, Source={x:Reference RootPage}}">
+                                                                <MenuFlyoutItem.IconImageSource>
+                                                                    <FontImageSource FontFamily="Segoe Fluent Icons" Glyph="&#xE77B;" />
+                                                                </MenuFlyoutItem.IconImageSource>
+                                                            </MenuFlyoutItem>
+                                                            <MenuFlyoutItem Text="{Binding BindingContext.TextShare, Source={x:Reference RootPage}}" Command="{Binding BindingContext.NotImplementedCommand, Source={x:Reference RootPage}}" CommandParameter="{Binding BindingContext.TextShare, Source={x:Reference RootPage}}">
+                                                                <MenuFlyoutItem.IconImageSource>
+                                                                    <FontImageSource FontFamily="Segoe Fluent Icons" Glyph="&#xE72D;" />
+                                                                </MenuFlyoutItem.IconImageSource>
+                                                            </MenuFlyoutItem>
+                                                        </MenuFlyout>
+                                                    </FlyoutBase.ContextFlyout>
                                                     <VisualStateManager.VisualStateGroups>
                                                         <VisualStateGroup x:Name="CommonStates">
                                                             <VisualState x:Name="Normal" />
@@ -865,93 +999,7 @@
                              Navigated="OnLoginWebViewNavigated" />
                 </Grid>
 
-                <!-- 5. SEKCE: FRONTA -->
-                <Grid Grid.Row="1" IsVisible="False" RowDefinitions="Auto, *">
-                    <Grid.Triggers>
-                        <DataTrigger TargetType="Grid" Binding="{Binding CurrentView}" Value="Queue">
-                            <Setter Property="IsVisible" Value="True" />
-                        </DataTrigger>
-                    </Grid.Triggers>
-
-                    <Grid Grid.Row="0" ColumnDefinitions="*, Auto" Margin="0,0,0,16">
-                        <VerticalStackLayout Grid.Column="0" Spacing="4">
-                            <Label Text="{Binding TextPlaybackQueue}" FontSize="28" FontAttributes="Bold" TextColor="{AppThemeBinding Light={StaticResource WinUITextPrimaryLight}, Dark={StaticResource WinUITextPrimaryDark}}" />
-                            <Label TextColor="{AppThemeBinding Light={StaticResource WinUITextSecondaryLight}, Dark={StaticResource WinUITextSecondaryDark}}" FontSize="13">
-                                <Label.Text>
-                                    <MultiBinding StringFormat="{}{0} {1}">
-                                        <Binding Path="TextSongsInQueueLabel" />
-                                        <Binding Path="PlaybackQueue.Count" />
-                                    </MultiBinding>
-                                </Label.Text>
-                            </Label>                        </VerticalStackLayout>
-                        <Button Grid.Column="1" 
-                                Text="{Binding TextClearQueue}" 
-                                Command="{Binding ClearQueueCommand}" 
-                                Style="{StaticResource WinUISecondaryBtn}" 
-                                VerticalOptions="Center" />
-                    </Grid>
-
-                    <!-- Queue List -->
-                    <CollectionView Grid.Row="1" 
-                                    ItemsSource="{Binding PlaybackQueue}"
-                                    SelectionMode="Single"
-                                    SelectedItem="{Binding SelectedQueueSong, Mode=TwoWay}">
-                        <CollectionView.ItemTemplate>
-                            <DataTemplate x:DataType="models:SongModel">
-                                <Border Stroke="{AppThemeBinding Light={StaticResource WinUIBorderLight}, Dark=Transparent}" StrokeThickness="1" StrokeShape="RoundRectangle 4" BackgroundColor="{AppThemeBinding Light={StaticResource WinUICardBgLight}, Dark=#202020}" Margin="0,0,0,6" Padding="10,8">
-                                    <VisualStateManager.VisualStateGroups>
-                                        <VisualStateGroup x:Name="CommonStates">
-                                            <VisualState x:Name="Normal" />
-                                            <VisualState x:Name="Selected">
-                                                <VisualState.Setters>
-                                                    <Setter Property="BackgroundColor" Value="{AppThemeBinding Light=#D2E8FF, Dark=#2A3D50}" />
-                                                    <Setter Property="Stroke" Value="{AppThemeBinding Light={StaticResource WinUIAccentLight}, Dark={StaticResource WinUIAccentDark}}" />
-                                                    <Setter Property="StrokeThickness" Value="1" />
-                                                </VisualState.Setters>
-                                            </VisualState>
-                                        </VisualStateGroup>
-                                    </VisualStateManager.VisualStateGroups>
-                                    
-                                    <Grid ColumnDefinitions="48, *, Auto" ColumnSpacing="15">
-                                        <Border Grid.Column="0" Stroke="Transparent" StrokeShape="RoundRectangle 4" HeightRequest="44" WidthRequest="44">
-                                            <Image Source="{Binding ThumbnailUrl}" Aspect="AspectFill" />
-                                        </Border>
-
-                                        <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
-                                            <Label Text="{Binding Title}" FontAttributes="Bold" FontSize="13" TextColor="{AppThemeBinding Light={StaticResource WinUITextPrimaryLight}, Dark={StaticResource WinUITextPrimaryDark}}" LineBreakMode="TailTruncation" />
-                                            <Label Text="{Binding Artist}" TextColor="{AppThemeBinding Light={StaticResource WinUITextSecondaryLight}, Dark={StaticResource WinUITextSecondaryDark}}" FontSize="11" LineBreakMode="TailTruncation" />
-                                        </VerticalStackLayout>
-
-                                        <Label Grid.Column="2" VerticalOptions="Center" Margin="0,0,10,0" FontSize="13" TextColor="{AppThemeBinding Light={StaticResource WinUIAccentLight}, Dark={StaticResource WinUIAccentDark}}">
-                                            <Label.FontFamily>
-                                                <OnPlatform x:TypeArguments="x:String">
-                                                    <On Platform="WinUI" Value="Segoe Fluent Icons" />
-                                                </OnPlatform>
-                                            </Label.FontFamily>
-                                            <Label.Text>
-                                                <OnPlatform x:TypeArguments="x:String">
-                                                    <On Platform="WinUI" Value="&#xE768;" />
-                                                    <On Platform="Default" Value="▶" />
-                                                </OnPlatform>
-                                            </Label.Text>
-                                        </Label>
-                                    </Grid>
-                                </Border>
-                            </DataTemplate>
-                        </CollectionView.ItemTemplate>
-                    </CollectionView>
-
-                    <!-- Empty state -->
-                    <VerticalStackLayout Grid.Row="1" 
-                                         VerticalOptions="Center" 
-                                         HorizontalOptions="Center" 
-                                         Spacing="12" 
-                                         IsVisible="{Binding IsCurrentSongNull}">
-                        <Label Text="{Binding TextEmptyQueue}" FontSize="18" FontAttributes="Bold" TextColor="{AppThemeBinding Light={StaticResource WinUITextSecondaryLight}, Dark={StaticResource WinUITextSecondaryDark}}" HorizontalOptions="Center" />
-                        <Label Text="{Binding TextEmptyQueueDesc}" TextColor="{AppThemeBinding Light={StaticResource WinUITextSecondaryLight}, Dark={StaticResource WinUITextSecondaryDark}}" FontSize="13" HorizontalOptions="Center" />
-                    </VerticalStackLayout>
-                </Grid>
-                <!-- ZDE JE PŘIDÁN ZAVÍRACÍ TAG PRO VIEWS AREA (Grid.Row=1) -->
+                <!-- SEKCE FRONTY PŘESUNUTA DO FULLSCREEN PŘEHRÁVAČE -->
                 </Grid>
             </Grid>
         </Grid>
@@ -972,9 +1020,6 @@
             <Grid Grid.Column="0" IsVisible="{Binding IsCurrentSongNotNull}">
                 <Border Stroke="Transparent" StrokeShape="RoundRectangle 12,0,12,0">
                     <Image Source="{Binding CurrentSong.ThumbnailUrl}" Aspect="AspectFill" />
-                </Border>
-                <Border BackgroundColor="#80000000" Stroke="Transparent" StrokeShape="RoundRectangle 16" WidthRequest="32" HeightRequest="32" HorizontalOptions="Center" VerticalOptions="Start" Margin="0,8,0,0">
-                    <Label Text="&#xE70E;" FontFamily="Segoe Fluent Icons" TextColor="White" FontSize="14" HorizontalOptions="Center" VerticalOptions="Center" />
                 </Border>
             </Grid>
 
@@ -1003,11 +1048,11 @@
                                 </DataTrigger>
                             </Button.Triggers>
                         </Button>
-                        <Button Command="{Binding PreviousCommand}" BackgroundColor="Transparent" Padding="0" WidthRequest="30" HeightRequest="30" TextColor="{AppThemeBinding Light={StaticResource WinUITextPrimaryLight}, Dark={StaticResource WinUITextPrimaryDark}}">
+                        <Button Command="{Binding PlayPreviousSongCommand}" BackgroundColor="Transparent" Padding="0" WidthRequest="30" HeightRequest="30" TextColor="{AppThemeBinding Light={StaticResource WinUITextPrimaryLight}, Dark={StaticResource WinUITextPrimaryDark}}">
                             <Button.FontFamily><OnPlatform x:TypeArguments="x:String"><On Platform="WinUI" Value="Segoe Fluent Icons" /></OnPlatform></Button.FontFamily>
                             <Button.Text><OnPlatform x:TypeArguments="x:String"><On Platform="WinUI" Value="&#xE892;" /><On Platform="Default" Value="⏮" /></OnPlatform></Button.Text>
                         </Button>
-                        <Button Command="{Binding NextSongCommand}" BackgroundColor="Transparent" Padding="0" WidthRequest="30" HeightRequest="30" TextColor="{AppThemeBinding Light={StaticResource WinUITextPrimaryLight}, Dark={StaticResource WinUITextPrimaryDark}}">
+                        <Button Command="{Binding PlayNextSongCommand}" BackgroundColor="Transparent" Padding="0" WidthRequest="30" HeightRequest="30" TextColor="{AppThemeBinding Light={StaticResource WinUITextPrimaryLight}, Dark={StaticResource WinUITextPrimaryDark}}">
                             <Button.FontFamily><OnPlatform x:TypeArguments="x:String"><On Platform="WinUI" Value="Segoe Fluent Icons" /></OnPlatform></Button.FontFamily>
                             <Button.Text><OnPlatform x:TypeArguments="x:String"><On Platform="WinUI" Value="&#xE893;" /><On Platform="Default" Value="⏭" /></OnPlatform></Button.Text>
                         </Button>
@@ -1026,8 +1071,8 @@
                     <!-- Pravé nástroje (Volume, Shuffle, Repeat atd.) -->
                     <HorizontalStackLayout Grid.Column="2" HorizontalOptions="End" VerticalOptions="Center" Spacing="16">
                         <!-- Volume -->
-                        <Label Text="&#xE767;" FontFamily="Segoe Fluent Icons" TextColor="{AppThemeBinding Light={StaticResource WinUITextPrimaryLight}, Dark={StaticResource WinUITextPrimaryDark}}" VerticalOptions="Center" FontSize="14" />
-                        <Slider Minimum="0" Maximum="1" Value="{Binding Volume}" WidthRequest="80" VerticalOptions="Center" MinimumTrackColor="{AppThemeBinding Light={StaticResource WinUIAccentLight}, Dark={StaticResource WinUIAccentDark}}" MaximumTrackColor="{AppThemeBinding Light=#D2D2D2, Dark=#3C3C3C}" ThumbColor="{AppThemeBinding Light={StaticResource WinUIAccentLight}, Dark={StaticResource WinUIAccentDark}}" />
+                        <Label Text="{Binding VolumeIcon}" ToolTipProperties.Text="{Binding VolumePercentageText}" FontFamily="Segoe Fluent Icons" TextColor="{AppThemeBinding Light={StaticResource WinUITextPrimaryLight}, Dark={StaticResource WinUITextPrimaryDark}}" VerticalOptions="Center" FontSize="14" />
+                        <Slider Minimum="0" Maximum="1" Value="{Binding Volume}" ToolTipProperties.Text="{Binding VolumePercentageText}" WidthRequest="80" VerticalOptions="Center" HandlerChanged="OnVolumeSliderHandlerChanged" MinimumTrackColor="{AppThemeBinding Light={StaticResource WinUIAccentLight}, Dark={StaticResource WinUIAccentDark}}" MaximumTrackColor="{AppThemeBinding Light=#D2D2D2, Dark=#3C3C3C}" ThumbColor="{AppThemeBinding Light={StaticResource WinUIAccentLight}, Dark={StaticResource WinUIAccentDark}}" />
                         <!-- Shuffle Button -->
                         <Button Command="{Binding ToggleShuffleCommand}" BackgroundColor="Transparent" Padding="0" Margin="0" VerticalOptions="Center" MinimumHeightRequest="24" WidthRequest="24" HeightRequest="24" TextColor="{AppThemeBinding Light={StaticResource WinUITextSecondaryLight}, Dark={StaticResource WinUITextSecondaryDark}}">
                             <Button.FontFamily><OnPlatform x:TypeArguments="x:String"><On Platform="WinUI" Value="Segoe Fluent Icons" /></OnPlatform></Button.FontFamily>
@@ -1050,20 +1095,202 @@
                                     <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource WinUIAccentLight}, Dark={StaticResource WinUIAccentDark}}" />
                                 </DataTrigger>
                                 <DataTrigger TargetType="Button" Binding="{Binding RepeatMode}" Value="2">
-                                    <Setter Property="Text"><Setter.Value><OnPlatform x:TypeArguments="x:String"><On Platform="WinUI" Value="&#xE8EF;" /><On Platform="Default" Value="🔂" /></OnPlatform></Setter.Value></Setter>
+                                    <Setter Property="Text"><Setter.Value><OnPlatform x:TypeArguments="x:String"><On Platform="WinUI" Value="&#xE8ED;" /><On Platform="Default" Value="🔂" /></OnPlatform></Setter.Value></Setter>
                                     <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource WinUIAccentLight}, Dark={StaticResource WinUIAccentDark}}" />
                                 </DataTrigger>
                             </Button.Triggers>
                         </Button>
-                        <Label Text="&#xE713;" FontFamily="Segoe Fluent Icons" TextColor="{AppThemeBinding Light={StaticResource WinUITextSecondaryLight}, Dark={StaticResource WinUITextSecondaryDark}}" VerticalOptions="Center" FontSize="14" />
-                        <Label Text="&#xE73F;" FontFamily="Segoe Fluent Icons" TextColor="{AppThemeBinding Light={StaticResource WinUITextSecondaryLight}, Dark={StaticResource WinUITextSecondaryDark}}" VerticalOptions="Center" FontSize="14" />
+
+                        <Button Command="{Binding ToggleFullScreenPlayerCommand}" BackgroundColor="Transparent" Padding="0" Margin="0" VerticalOptions="Center" MinimumHeightRequest="24" WidthRequest="24" HeightRequest="24" TextColor="{AppThemeBinding Light={StaticResource WinUITextSecondaryLight}, Dark={StaticResource WinUITextSecondaryDark}}">
+                            <Button.FontFamily><OnPlatform x:TypeArguments="x:String"><On Platform="WinUI" Value="Segoe Fluent Icons" /></OnPlatform></Button.FontFamily>
+                            <Button.Text><OnPlatform x:TypeArguments="x:String"><On Platform="WinUI" Value="&#xE740;" /><On Platform="Default" Value="⛶" /></OnPlatform></Button.Text>
+                        </Button>
                         <Label Text="&#xE712;" FontFamily="Segoe Fluent Icons" TextColor="{AppThemeBinding Light={StaticResource WinUITextSecondaryLight}, Dark={StaticResource WinUITextSecondaryDark}}" VerticalOptions="Center" FontSize="14" />
                     </HorizontalStackLayout>
                 </Grid>
             </Grid>
         </Grid>
-
     </Grid>
+
+        <!-- FULLSCREEN PLAYER OVERLAY -->
+        <Grid x:Name="FullScreenGrid" 
+              Grid.RowSpan="3" 
+              Grid.ColumnSpan="2" 
+              IsVisible="False"
+              BackgroundColor="{AppThemeBinding Light={StaticResource WinUIBgLight}, Dark={StaticResource WinUIBgDark}}"
+              ZIndex="100">
+            <!-- Blur Background -->
+            <Image Source="{Binding CurrentSong.ThumbnailUrl}" Aspect="AspectFill" Opacity="0.4" />
+            <BoxView Color="{AppThemeBinding Light=#E6F3F3F3, Dark=#E6141414}" />
+
+            <Grid ColumnDefinitions="6*, 4*" Margin="0, 0, 32, 0">
+                
+                <!-- LEVÁ ČÁST: PŘEHRÁVAČ -->
+                <Grid Grid.Column="0">
+                    <!-- Close Button -->
+                    <Button Command="{Binding ToggleFullScreenPlayerCommand}" 
+                            Text="&#xE711;" FontFamily="Segoe Fluent Icons" FontSize="18"
+                            BackgroundColor="Transparent" TextColor="{AppThemeBinding Light={StaticResource WinUITextPrimaryLight}, Dark={StaticResource WinUITextPrimaryDark}}"
+                            HorizontalOptions="Start" VerticalOptions="Start" Margin="32" WidthRequest="44" HeightRequest="44" />
+
+                    <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Spacing="24" WidthRequest="500" MaximumWidthRequest="800">
+                        <Border Stroke="Transparent" StrokeShape="RoundRectangle 24" WidthRequest="400" HeightRequest="400" HorizontalOptions="Center">
+                            <Image Source="{Binding CurrentSong.ThumbnailUrl}" Aspect="AspectFill" />
+                        </Border>
+                        <Label Text="{Binding CurrentSong.Title}" FontSize="32" FontAttributes="Bold" HorizontalOptions="Center" HorizontalTextAlignment="Center" TextColor="{AppThemeBinding Light={StaticResource WinUITextPrimaryLight}, Dark={StaticResource WinUITextPrimaryDark}}" />
+                        <Label Text="{Binding CurrentSong.Artist}" FontSize="18" HorizontalOptions="Center" HorizontalTextAlignment="Center" TextColor="{AppThemeBinding Light={StaticResource WinUITextSecondaryLight}, Dark={StaticResource WinUITextSecondaryDark}}" />
+
+                        <Grid ColumnDefinitions="Auto, *, Auto" Margin="0,32,0,0">
+                            <Label Grid.Column="0" Text="{Binding PositionText}" VerticalOptions="Center" TextColor="{AppThemeBinding Light={StaticResource WinUITextSecondaryLight}, Dark={StaticResource WinUITextSecondaryDark}}" />
+                            <Slider Grid.Column="1" Minimum="0" Maximum="{Binding DurationSeconds}" Value="{Binding PositionSeconds}" DragStarted="OnSliderDragStarted" DragCompleted="OnSliderDragCompleted" MinimumTrackColor="{AppThemeBinding Light={StaticResource WinUIAccentLight}, Dark={StaticResource WinUIAccentDark}}" MaximumTrackColor="{AppThemeBinding Light=#D2D2D2, Dark=#3C3C3C}" ThumbColor="{AppThemeBinding Light={StaticResource WinUIAccentLight}, Dark={StaticResource WinUIAccentDark}}" Margin="16,0" />
+                            <Label Grid.Column="2" Text="{Binding DurationText}" VerticalOptions="Center" TextColor="{AppThemeBinding Light={StaticResource WinUITextSecondaryLight}, Dark={StaticResource WinUITextSecondaryDark}}" />
+                        </Grid>
+
+                        <HorizontalStackLayout HorizontalOptions="Center" Spacing="32" Margin="0,16,0,0">
+                            <Button Command="{Binding ToggleShuffleCommand}" Text="&#xE8B1;" FontFamily="Segoe Fluent Icons" BackgroundColor="Transparent" FontSize="20" WidthRequest="48" HeightRequest="48" TextColor="{AppThemeBinding Light={StaticResource WinUITextSecondaryLight}, Dark={StaticResource WinUITextSecondaryDark}}">
+                                <Button.Triggers>
+                                    <DataTrigger TargetType="Button" Binding="{Binding IsShuffle}" Value="True">
+                                        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource WinUIAccentLight}, Dark={StaticResource WinUIAccentDark}}" />
+                                    </DataTrigger>
+                                </Button.Triggers>
+                            </Button>
+                            <Button Command="{Binding PlayPreviousSongCommand}" Text="&#xE892;" FontFamily="Segoe Fluent Icons" BackgroundColor="Transparent" FontSize="24" WidthRequest="64" HeightRequest="64" TextColor="{AppThemeBinding Light={StaticResource WinUITextPrimaryLight}, Dark={StaticResource WinUITextPrimaryDark}}" />
+                            <Button Command="{Binding PlayPauseCommand}" BackgroundColor="{AppThemeBinding Light={StaticResource WinUIAccentLight}, Dark={StaticResource WinUIAccentDark}}" TextColor="White" CornerRadius="32" FontSize="24" WidthRequest="64" HeightRequest="64">
+                                <Button.FontFamily><OnPlatform x:TypeArguments="x:String"><On Platform="WinUI" Value="Segoe Fluent Icons" /></OnPlatform></Button.FontFamily>
+                                <Button.Text><OnPlatform x:TypeArguments="x:String"><On Platform="WinUI" Value="&#xE768;" /><On Platform="Default" Value="▶" /></OnPlatform></Button.Text>
+                                <Button.Triggers>
+                                    <DataTrigger TargetType="Button" Binding="{Binding IsPlaying}" Value="True">
+                                        <Setter Property="Text"><Setter.Value><OnPlatform x:TypeArguments="x:String"><On Platform="WinUI" Value="&#xE769;" /><On Platform="Default" Value="⏸" /></OnPlatform></Setter.Value></Setter>
+                                    </DataTrigger>
+                                </Button.Triggers>
+                            </Button>
+                            <Button Command="{Binding PlayNextSongCommand}" Text="&#xE893;" FontFamily="Segoe Fluent Icons" BackgroundColor="Transparent" FontSize="24" WidthRequest="64" HeightRequest="64" TextColor="{AppThemeBinding Light={StaticResource WinUITextPrimaryLight}, Dark={StaticResource WinUITextPrimaryDark}}" />
+                            <Button Command="{Binding ToggleRepeatCommand}" BackgroundColor="Transparent" FontSize="20" WidthRequest="48" HeightRequest="48">
+                                <Button.FontFamily><OnPlatform x:TypeArguments="x:String"><On Platform="WinUI" Value="Segoe Fluent Icons" /></OnPlatform></Button.FontFamily>
+                                <Button.Triggers>
+                                    <DataTrigger TargetType="Button" Binding="{Binding RepeatMode}" Value="0">
+                                        <Setter Property="Text"><Setter.Value><OnPlatform x:TypeArguments="x:String"><On Platform="WinUI" Value="&#xE8EE;" /><On Platform="Default" Value="🔁" /></OnPlatform></Setter.Value></Setter>
+                                        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource WinUITextSecondaryLight}, Dark={StaticResource WinUITextSecondaryDark}}" />
+                                    </DataTrigger>
+                                    <DataTrigger TargetType="Button" Binding="{Binding RepeatMode}" Value="1">
+                                        <Setter Property="Text"><Setter.Value><OnPlatform x:TypeArguments="x:String"><On Platform="WinUI" Value="&#xE8EE;" /><On Platform="Default" Value="🔁" /></OnPlatform></Setter.Value></Setter>
+                                        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource WinUIAccentLight}, Dark={StaticResource WinUIAccentDark}}" />
+                                    </DataTrigger>
+                                    <DataTrigger TargetType="Button" Binding="{Binding RepeatMode}" Value="2">
+                                        <Setter Property="Text"><Setter.Value><OnPlatform x:TypeArguments="x:String"><On Platform="WinUI" Value="&#xE8ED;" /><On Platform="Default" Value="🔂" /></OnPlatform></Setter.Value></Setter>
+                                        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource WinUIAccentLight}, Dark={StaticResource WinUIAccentDark}}" />
+                                    </DataTrigger>
+                                </Button.Triggers>
+                            </Button>
+                        </HorizontalStackLayout>
+                    </VerticalStackLayout>
+                </Grid>
+
+                <!-- PRAVÁ ČÁST: FRONTA -->
+                <Grid Grid.Column="1" RowDefinitions="Auto, *" Margin="0,64,0,32">
+                    <Grid Grid.Row="0" ColumnDefinitions="*, Auto" Margin="0,0,0,16">
+                        <VerticalStackLayout Grid.Column="0" Spacing="4">
+                            <Label Text="{Binding TextPlaybackQueue}" FontSize="24" FontAttributes="Bold" TextColor="{AppThemeBinding Light={StaticResource WinUITextPrimaryLight}, Dark={StaticResource WinUITextPrimaryDark}}" />
+                            <Label TextColor="{AppThemeBinding Light={StaticResource WinUITextSecondaryLight}, Dark={StaticResource WinUITextSecondaryDark}}" FontSize="13">
+                                <Label.Text>
+                                    <MultiBinding StringFormat="{}{0} {1}">
+                                        <Binding Path="TextSongsInQueueLabel" />
+                                        <Binding Path="PlaybackQueue.Count" />
+                                    </MultiBinding>
+                                </Label.Text>
+                            </Label>                        
+                        </VerticalStackLayout>
+                        <Button Grid.Column="1" 
+                                Text="{Binding TextClearQueue}" 
+                                Command="{Binding ClearQueueCommand}" 
+                                Style="{StaticResource WinUISecondaryBtn}" 
+                                VerticalOptions="Center" />
+                    </Grid>
+
+                    <!-- Queue List -->
+                    <CollectionView Grid.Row="1" 
+                                    ItemsSource="{Binding PlaybackQueue}"
+                                    SelectionMode="Single"
+                                    SelectedItem="{Binding SelectedQueueSong, Mode=TwoWay}">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="models:SongModel">
+                                <Border Stroke="{AppThemeBinding Light={StaticResource WinUIBorderLight}, Dark=Transparent}" StrokeThickness="1" StrokeShape="RoundRectangle 4" BackgroundColor="{AppThemeBinding Light={StaticResource WinUICardBgLight}, Dark=#202020}" Margin="0,0,16,6" Padding="10,8">
+                                    <Border.GestureRecognizers>
+                                        <DropGestureRecognizer AllowDrop="True" DropCommand="{Binding BindingContext.DropCommand, Source={x:Reference RootPage}}" DropCommandParameter="{Binding .}" />
+                                    </Border.GestureRecognizers>
+                                    <FlyoutBase.ContextFlyout>
+                                        <MenuFlyout>
+                                            <MenuFlyoutItem Text="{Binding BindingContext.TextRemoveFromQueue, Source={x:Reference RootPage}}" 
+                                                            Command="{Binding BindingContext.RemoveFromQueueCommand, Source={x:Reference RootPage}}" 
+                                                            CommandParameter="{Binding .}" />
+                                        </MenuFlyout>
+                                    </FlyoutBase.ContextFlyout>
+                                    <VisualStateManager.VisualStateGroups>
+                                        <VisualStateGroup x:Name="CommonStates">
+                                            <VisualState x:Name="Normal" />
+                                            <VisualState x:Name="Selected">
+                                                <VisualState.Setters>
+                                                    <Setter Property="BackgroundColor" Value="{AppThemeBinding Light=#D2E8FF, Dark=#2A3D50}" />
+                                                    <Setter Property="Stroke" Value="{AppThemeBinding Light={StaticResource WinUIAccentLight}, Dark={StaticResource WinUIAccentDark}}" />
+                                                    <Setter Property="StrokeThickness" Value="1" />
+                                                </VisualState.Setters>
+                                            </VisualState>
+                                            <VisualState x:Name="PointerOver">
+                                                <VisualState.Setters>
+                                                    <Setter Property="BackgroundColor" Value="{AppThemeBinding Light=#F3F3F3, Dark=#2D2D2D}" />
+                                                </VisualState.Setters>
+                                            </VisualState>
+                                        </VisualStateGroup>
+                                    </VisualStateManager.VisualStateGroups>
+                                    
+                                    <Grid ColumnDefinitions="Auto, 48, *, Auto" ColumnSpacing="15">
+                                        <!-- Drag Handle -->
+                                        <Label Grid.Column="0" Text="&#xE76F;" FontFamily="Segoe Fluent Icons" VerticalOptions="Center" TextColor="{AppThemeBinding Light={StaticResource WinUITextSecondaryLight}, Dark={StaticResource WinUITextSecondaryDark}}" FontSize="16" Margin="0,0,5,0">
+                                            <Label.GestureRecognizers>
+                                                <DragGestureRecognizer CanDrag="True" DragStartingCommand="{Binding BindingContext.DragStartingCommand, Source={x:Reference RootPage}}" DragStartingCommandParameter="{Binding .}" />
+                                            </Label.GestureRecognizers>
+                                        </Label>
+                                        
+                                        <Border Grid.Column="1" Stroke="Transparent" StrokeShape="RoundRectangle 4" HeightRequest="44" WidthRequest="44">
+                                            <Image Source="{Binding ThumbnailUrl}" Aspect="AspectFill" />
+                                        </Border>
+
+                                        <VerticalStackLayout Grid.Column="2" VerticalOptions="Center" Spacing="2">
+                                            <Label Text="{Binding Title}" FontSize="14" FontAttributes="Bold" MaxLines="1" LineBreakMode="TailTruncation" TextColor="{AppThemeBinding Light={StaticResource WinUITextPrimaryLight}, Dark={StaticResource WinUITextPrimaryDark}}" />
+                                            <Label Text="{Binding Artist}" FontSize="12" MaxLines="1" LineBreakMode="TailTruncation" TextColor="{AppThemeBinding Light={StaticResource WinUITextSecondaryLight}, Dark={StaticResource WinUITextSecondaryDark}}" />
+                                        </VerticalStackLayout>
+
+                                        <Label Grid.Column="3" VerticalOptions="Center" Margin="0,0,10,0" FontSize="13" TextColor="{AppThemeBinding Light={StaticResource WinUIAccentLight}, Dark={StaticResource WinUIAccentDark}}">
+                                            <Label.FontFamily>
+                                                <OnPlatform x:TypeArguments="x:String">
+                                                    <On Platform="WinUI" Value="Segoe Fluent Icons" />
+                                                </OnPlatform>
+                                            </Label.FontFamily>
+                                            <Label.Text>
+                                                <OnPlatform x:TypeArguments="x:String">
+                                                    <On Platform="WinUI" Value="&#xE768;" />
+                                                    <On Platform="Default" Value="▶" />
+                                                </OnPlatform>
+                                            </Label.Text>
+                                        </Label>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+
+                    <!-- Empty state -->
+                    <VerticalStackLayout Grid.Row="1" 
+                                         VerticalOptions="Center" 
+                                         HorizontalOptions="Center" 
+                                         Spacing="12" 
+                                         IsVisible="{Binding IsCurrentSongNull}">
+                        <Label Text="{Binding TextEmptyQueue}" FontSize="18" FontAttributes="Bold" TextColor="{AppThemeBinding Light={StaticResource WinUITextSecondaryLight}, Dark={StaticResource WinUITextSecondaryDark}}" HorizontalOptions="Center" />
+                        <Label Text="{Binding TextEmptyQueueDesc}" TextColor="{AppThemeBinding Light={StaticResource WinUITextSecondaryLight}, Dark={StaticResource WinUITextSecondaryDark}}" FontSize="13" HorizontalOptions="Center" />
+                    </VerticalStackLayout>
+                </Grid>
+            </Grid>
+        </Grid>
     </Grid>
 
 </ContentPage>

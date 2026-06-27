@@ -4,14 +4,14 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.Maui.Controls;
-using YoutubeMusic.ViewModels;
+using Melodium.ViewModels;
 
 #if WINDOWS
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.Web.WebView2.Core;
 #endif
 
-namespace YoutubeMusic;
+namespace Melodium;
 
 public partial class MainPage : ContentPage
 {
@@ -25,6 +25,58 @@ public partial class MainPage : ContentPage
         if (audioService is Services.MauiAudioService mauiAudioService)
         {
             mauiAudioService.Initialize(AudioPlayer);
+        }
+    }
+
+    protected override void OnAppearing()
+    {
+        base.OnAppearing();
+        if (BindingContext is MainViewModel vm)
+        {
+            vm.PropertyChanged += Vm_PropertyChanged;
+        }
+    }
+
+    protected override void OnDisappearing()
+    {
+        base.OnDisappearing();
+        if (BindingContext is MainViewModel vm)
+        {
+            vm.PropertyChanged -= Vm_PropertyChanged;
+        }
+    }
+
+    private void Vm_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(MainViewModel.IsFullScreenPlayerVisible))
+        {
+            var vm = (MainViewModel)sender!;
+            if (vm.IsFullScreenPlayerVisible)
+            {
+                FullScreenGrid.IsVisible = true;
+                FullScreenGrid.Opacity = 0;
+                FullScreenGrid.TranslationY = 150;
+                
+                FullScreenGrid.FadeTo(1, 350, Easing.CubicOut);
+                FullScreenGrid.TranslateTo(0, 0, 350, Easing.CubicOut);
+            }
+            else
+            {
+                FullScreenGrid.FadeTo(0, 300, Easing.CubicIn);
+                FullScreenGrid.TranslateTo(0, 150, 300, Easing.CubicIn).ContinueWith(t => 
+                {
+                    MainThread.BeginInvokeOnMainThread(() => FullScreenGrid.IsVisible = false);
+                });
+            }
+        }
+        else if (e.PropertyName == nameof(MainViewModel.CurrentView))
+        {
+            // Fade out, pak hned fade in s drobným posunem pro plynulejší pocit
+            ViewsAreaGrid.Opacity = 0;
+            ViewsAreaGrid.TranslationY = 20;
+            
+            ViewsAreaGrid.FadeTo(1, 300, Easing.CubicOut);
+            ViewsAreaGrid.TranslateTo(0, 0, 300, Easing.CubicOut);
         }
     }
 
@@ -42,6 +94,37 @@ public partial class MainPage : ContentPage
         {
             var newPosition = TimeSpan.FromSeconds(slider.Value);
             vm.SeekTo(newPosition);
+        }
+    }
+
+    private void OnVolumeSliderHandlerChanged(object? sender, EventArgs e)
+    {
+#if WINDOWS
+        if (sender is Microsoft.Maui.Controls.Slider slider && slider.Handler?.PlatformView is Microsoft.UI.Xaml.UIElement nativeSlider)
+        {
+            nativeSlider.PointerWheelChanged += (s, args) =>
+            {
+                var delta = args.GetCurrentPoint(nativeSlider).Properties.MouseWheelDelta;
+                if (delta > 0)
+                {
+                    slider.Value = Math.Min(1.0, slider.Value + 0.01);
+                }
+                else if (delta < 0)
+                {
+                    slider.Value = Math.Max(0.0, slider.Value - 0.01);
+                }
+                args.Handled = true;
+            };
+        }
+#endif
+    }
+
+    private void OnDiscordRpcToggled(object? sender, ToggledEventArgs e)
+    {
+        if (BindingContext is MainViewModel vm)
+        {
+            System.Diagnostics.Debug.WriteLine($"[MainPage] OnDiscordRpcToggled to {e.Value}");
+            vm.IsDiscordRpcEnabled = e.Value;
         }
     }
 

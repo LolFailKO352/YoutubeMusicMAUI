@@ -1,7 +1,7 @@
 ﻿using ObjCRuntime;
 using UIKit;
 
-namespace YoutubeMusic
+namespace Melodium
 {
     public class Program
     {

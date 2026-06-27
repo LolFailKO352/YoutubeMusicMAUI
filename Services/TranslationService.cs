@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using System.Collections.Concurrent;
 using System.Text;
 
-namespace YoutubeMusic.Services
+namespace Melodium.Services
 {
     public class TranslationService
     {
