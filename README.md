@@ -1,6 +1,5 @@
 # Melodium (Unofficial MAUI Client)
 
-![Melodium App Banner](docs/images/banner_placeholder.png) <!-- Add banner here later -->
 
 A modern, fast, and unofficial Melodium client built on the [.NET MAUI](https://dotnet.microsoft.com/en-us/apps/maui) platform. This application brings the best of Melodium straight to your desktop using a native interface, improved music recommendation algorithms, and deep system integration.
 
@@ -28,7 +27,9 @@ A modern, fast, and unofficial Melodium client built on the [.NET MAUI](https://
 
 ## 🎚️ How to install
 
-To install application download .zip file from Releases tab unzip it and run Melodium.msi.
+To install application:
+1. Download .NET runtime from here https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/runtime-desktop-10.0.9-windows-x64-installer?cid=getdotnetcore
+2. Download .zip file from Releases tab unzip it and run Melodium.msi.
 
 ## 🔐 How Login Works
 
