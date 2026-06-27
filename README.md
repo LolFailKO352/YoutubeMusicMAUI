@@ -18,13 +18,17 @@ A modern, fast, and unofficial Melodium client built on the [.NET MAUI](https://
 
 | Home Screen | Player and Queue |
 |-------------|----------------|
-| ![Home](docs/images/screenshot_home.png) | ![Player](docs/images/screenshot_player.png) |
+| <img width="1906" height="1018" alt="image" src="https://github.com/user-attachments/assets/ac71d8da-a9b9-4dc8-ba5b-c0c16cf42107" /> | <img width="1906" height="1018" alt="image" src="https://github.com/user-attachments/assets/6b908b17-4bc8-4736-a5e5-2fb54f0d2ba3" /> |
 
 | Search Results | Personal Library |
 |----------------|--------------|
-| ![Search](docs/images/screenshot_search.png) | ![Library](docs/images/screenshot_library.png) |
+| <img width="1906" height="1018" alt="image" src="https://github.com/user-attachments/assets/74c4fc6c-f2cb-498b-aa5f-8542d662e948" /> | <img width="1906" height="1018" alt="image" src="https://github.com/user-attachments/assets/8639cb35-da04-49de-8e50-09847734c549" /> |
 
 *(Note: Don't forget to add your own images to the `docs/images/` folder later and update the filenames above!)*
+
+## How to install
+
+To install application download .zip file from Releases tab unzip it and run Melodium.msi.
 
 <<<<<<< HEAD
 ## 🔐 How Login Works
