@@ -26,7 +26,7 @@ A modern, fast, and unofficial Melodium client built on the [.NET MAUI](https://
 
 *(Note: Don't forget to add your own images to the `docs/images/` folder later and update the filenames above!)*
 
-## How to install
+## 🎚️ How to install
 
 To install application download .zip file from Releases tab unzip it and run Melodium.msi.
 
