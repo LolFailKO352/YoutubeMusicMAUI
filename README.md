@@ -30,7 +30,6 @@ A modern, fast, and unofficial Melodium client built on the [.NET MAUI](https://
 
 To install application download .zip file from Releases tab unzip it and run Melodium.msi.
 
-<<<<<<< HEAD
 ## 🔐 How Login Works
 
 The application uses a secure built-in browser window (WebView) to allow you to log in directly via Google/YouTube. After a successful login, the app securely retrieves "session cookies" in the background. Thanks to them, it gains access to your personal library and can generate personalized recommendations. This approach fully bypasses the need for an official (and often paid) API key.
