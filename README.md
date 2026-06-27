@@ -1,6 +1,5 @@
 # Melodium (Unofficial MAUI Client)
 
-![Melodium App Banner](docs/images/banner_placeholder.png) <!-- Add banner here later -->
 
 A modern, fast, and unofficial Melodium client built on the [.NET MAUI](https://dotnet.microsoft.com/en-us/apps/maui) platform. This application brings the best of Melodium straight to your desktop using a native interface, improved music recommendation algorithms, and deep system integration.
 
@@ -18,15 +17,20 @@ A modern, fast, and unofficial Melodium client built on the [.NET MAUI](https://
 
 | Home Screen | Player and Queue |
 |-------------|----------------|
-| ![Home](docs/images/screenshot_home.png) | ![Player](docs/images/screenshot_player.png) |
+| <img width="1906" height="1018" alt="image" src="https://github.com/user-attachments/assets/ac71d8da-a9b9-4dc8-ba5b-c0c16cf42107" /> | <img width="1906" height="1018" alt="image" src="https://github.com/user-attachments/assets/6b908b17-4bc8-4736-a5e5-2fb54f0d2ba3" /> |
 
 | Search Results | Personal Library |
 |----------------|--------------|
-| ![Search](docs/images/screenshot_search.png) | ![Library](docs/images/screenshot_library.png) |
+| <img width="1906" height="1018" alt="image" src="https://github.com/user-attachments/assets/74c4fc6c-f2cb-498b-aa5f-8542d662e948" /> | <img width="1906" height="1018" alt="image" src="https://github.com/user-attachments/assets/8639cb35-da04-49de-8e50-09847734c549" /> |
 
 *(Note: Don't forget to add your own images to the `docs/images/` folder later and update the filenames above!)*
 
-<<<<<<< HEAD
+## 🎚️ How to install
+
+To install application:
+1. Download .NET runtime from here https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/runtime-desktop-10.0.9-windows-x64-installer?cid=getdotnetcore
+2. Download .zip file from Releases tab unzip it and run Melodium.msi.
+
 ## 🔐 How Login Works
 
 The application uses a secure built-in browser window (WebView) to allow you to log in directly via Google/YouTube. After a successful login, the app securely retrieves "session cookies" in the background. Thanks to them, it gains access to your personal library and can generate personalized recommendations. This approach fully bypasses the need for an official (and often paid) API key.
