@@ -12,6 +12,11 @@ public static class MauiProgram
 {
     public static MauiApp CreateMauiApp()
     {
+#if WINDOWS
+        var webView2UserDataFolder = System.IO.Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.LocalApplicationData), "Melodium", "WebView2");
+        System.Environment.SetEnvironmentVariable("WEBVIEW2_USER_DATA_FOLDER", webView2UserDataFolder);
+#endif
+
         var builder = MauiApp.CreateBuilder();
         builder
             .UseMauiApp<App>()

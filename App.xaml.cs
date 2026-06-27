@@ -8,10 +8,7 @@ namespace Melodium
     {
         public App()
         {
-#if WINDOWS
-            var userDataFolder = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Melodium", "WebView2");
-            Environment.SetEnvironmentVariable("WEBVIEW2_USER_DATA_FOLDER", userDataFolder);
-#endif
+
             InitializeComponent();
 
             AppDomain.CurrentDomain.UnhandledException += (sender, e) =>
